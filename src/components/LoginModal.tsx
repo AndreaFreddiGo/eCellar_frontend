@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
@@ -8,38 +8,41 @@ interface LoginModalProps {
   handleClose: () => void
 }
 
-function LoginModal({ show, handleClose }: LoginModalProps) {
+const LoginModal = (props: LoginModalProps) => {
+  // Form state
   const [formData, setFormData] = useState<LoginRequest>({
     email: '',
     password: '',
   })
 
+  // Error message
   const [error, setError] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  // This function handles the form submission
+  // It prevents the default form submission behavior and calls the login function
+  // It is a promise-based function that handles the login process
+  // If the login is successful, it saves the token and user info to localStorage
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     try {
       const response = await login(formData)
 
+      // It saves login info to localStorage
       localStorage.setItem('token', response.token)
       localStorage.setItem('username', response.username)
       localStorage.setItem('name', response.name)
-      localStorage.setItem('userId', response.userId.toString())
+      localStorage.setItem('userId', response.userId)
       localStorage.setItem('profilePicture', response.profilePicture)
 
       setError('')
-      handleClose()
-    } catch (err) {
+      props.handleClose()
+    } catch {
       setError('Invalid email or password')
     }
   }
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
@@ -52,7 +55,9 @@ function LoginModal({ show, handleClose }: LoginModalProps) {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </Form.Group>
@@ -62,13 +67,15 @@ function LoginModal({ show, handleClose }: LoginModalProps) {
               type="password"
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               required
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={props.handleClose}>
             Close
           </Button>
           <Button variant="primary" type="submit">
