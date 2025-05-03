@@ -1,9 +1,9 @@
-function eCellarNavbar() {
+function EcellaNavbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          eCellar
+          <span style={{ color: 'darkred' }}>e</span>Cellar
         </a>
         <button
           className="navbar-toggler"
@@ -45,4 +45,4 @@ function eCellarNavbar() {
   )
 }
 
-export default eCellarNavbar
+export default EcellaNavbar

@@ -3,12 +3,12 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import './App.css'
 
 import HomePage from './pages/HomePage'
-import CustomNavbar from './components/CustomNavbar'
+import EcellaNavbar from './components/eCellarNavbar'
 
 function App() {
   return (
     <>
-      <CustomNavbar />
+      <EcellaNavbar />
       <HomePage />
     </>
   )

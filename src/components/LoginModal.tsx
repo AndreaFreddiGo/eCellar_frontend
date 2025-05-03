@@ -4,12 +4,12 @@ import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
 
 interface LoginModalProps {
-  show: boolean
+  showLoginModal: boolean
   handleClose: () => void
 }
 
 const LoginModal = (props: LoginModalProps) => {
-  // Form state
+  // State for form data (email & password)
   const [formData, setFormData] = useState<LoginRequest>({
     email: '',
     password: '',
@@ -42,7 +42,7 @@ const LoginModal = (props: LoginModalProps) => {
   }
 
   return (
-    <Modal show={props.show} onHide={props.handleClose}>
+    <Modal show={props.showLoginModal} onHide={props.handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
