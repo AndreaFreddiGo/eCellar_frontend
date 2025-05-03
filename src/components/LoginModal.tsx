@@ -2,6 +2,8 @@ import { FormEvent, useState } from 'react'
 import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
+import ErrorAlert from './ErrorAlert'
+import axios from 'axios'
 
 interface LoginModalProps {
   showLoginModal: boolean
@@ -9,7 +11,8 @@ interface LoginModalProps {
 }
 
 const LoginModal = (props: LoginModalProps) => {
-  // State for form data (email & password)
+  // This is the state for the form data
+  // It uses the LoginRequest interface to define the structure of the data
   const [formData, setFormData] = useState<LoginRequest>({
     email: '',
     password: '',
@@ -36,8 +39,12 @@ const LoginModal = (props: LoginModalProps) => {
 
       setError('')
       props.handleClose()
-    } catch {
-      setError('Invalid email or password')
+    } catch (err) {
+      if (typeof err === 'object' && err !== null && 'message' in err) {
+        setError((err as { message: string }).message)
+      } else {
+        setError('An unexpected error occurred')
+      }
     }
   }
 
@@ -48,7 +55,7 @@ const LoginModal = (props: LoginModalProps) => {
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
+          {error && <ErrorAlert message={error} />}
           <Form.Group controlId="email">
             <Form.Label>Email</Form.Label>
             <Form.Control

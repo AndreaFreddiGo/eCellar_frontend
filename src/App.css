@@ -1,3 +1,11 @@
 body {
   background-color: #f4f2ee;
+  font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial',
+    'sans-serif';
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
 }

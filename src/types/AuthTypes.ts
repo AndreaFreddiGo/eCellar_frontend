@@ -12,3 +12,8 @@ export interface LoginResponse {
   userId: string // UUID as string
   profilePicture: string
 }
+
+// Expected structure for user profile response
+export interface ErrorResponse {
+  message: string
+}
