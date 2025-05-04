@@ -9,3 +9,94 @@ h1 {
   font-size: 2.5rem;
   font-weight: 500;
 }
+
+/* Modal styles */
+.eCellar-modal .modal-content {
+  background: #ffffff;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 30%,
+    rgba(244, 242, 238, 1) 100%
+  );
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-height: 600px;
+}
+
+.eCellar-modal .modal-header .btn-close {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+/* Form input styles */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+}
+
+/* Social buttons */
+.google-btn {
+  border: 1px solid #dadce0;
+  background-color: #fff;
+  color: #3c4043;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.google-btn:hover {
+  background-color: #f1f3f4;
+  color: #3c4043;
+  border-color: #dadce0;
+}
+
+.facebook-btn {
+  background-color: #39579a;
+  border: none;
+  font-weight: 500;
+}
+
+.facebook-btn:hover {
+  background-color: #2e4a89;
+  color: white;
+}
+
+/* Login button */
+.login-button {
+  background-color: #8b0000;
+  border: none;
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #6f0000;
+  color: white;
+}
+
+/* Divider style */
+hr {
+  border-top: 1px solid #eee;
+}
+
+.wine_modal_image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.border-line {
+  border-bottom: 1px solid #dee2e6;
+  height: 0;
+}

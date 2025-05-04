@@ -18,7 +18,7 @@ function EcellaNavbar() {
           </Navbar.Brand>
           <Nav className="ms-auto">
             <Nav.Link href="#login" onClick={handleShow}>
-              Login
+              Log in
             </Nav.Link>
           </Nav>
         </Container>

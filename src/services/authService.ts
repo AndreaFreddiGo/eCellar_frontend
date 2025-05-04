@@ -12,7 +12,7 @@ export const login = async (
 ): Promise<LoginResponse> => {
   try {
     const response = await axios.post<LoginResponse>(
-      'http://localhost:3001/auth/login',
+      API_BASE_URL + '/login',
       credentials
     )
     return response.data
