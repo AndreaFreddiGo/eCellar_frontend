@@ -21,8 +21,8 @@ function App() {
     const name = localStorage.getItem('name')
     const username = localStorage.getItem('username')
     const userId = localStorage.getItem('userId')
-    const profilePicture = localStorage.getItem('profilePicture')
-    if (name && username && userId && profilePicture) {
+    const profilePicture = localStorage.getItem('profilePicture') || ''
+    if (name && username && userId) {
       setUser({ name, username, userId, profilePicture })
     }
   }, [])
@@ -46,7 +46,7 @@ function App() {
         setUser={setUser}
         onSignUpClick={() => console.log('Redirect to sign up')} // Add actual redirect logic if needed
       />
-      <HomePage />
+      <HomePage user={user} onLoginClick={() => setShowLoginModal(true)} />
     </>
   )
 }

@@ -1,5 +1,14 @@
+/* Global styles */
 body {
-  background-color: #f4f2ee;
+  background-image: url(./assets/eCellar_background.png);
+  background-size: cover;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* Adds a semi-transparent overlay */
+  background-blend-mode: overlay; /* Blends the color with the image */
   font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial',
     'sans-serif';
   font-weight: 400;
@@ -30,7 +39,16 @@ h1 {
   margin: 0.5rem;
 }
 
-/* Form input styles */
+.wine_modal_image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 120px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Form styles */
 .form-control {
   border-radius: 8px;
   border: 1px solid #cccccc;
@@ -68,7 +86,7 @@ h1 {
   color: white;
 }
 
-/* Login button */
+/* Login button styles */
 .login-button {
   background-color: #8b0000;
   border: none;
@@ -82,18 +100,9 @@ h1 {
   color: white;
 }
 
-/* Divider style */
+/* Divider styles */
 hr {
   border-top: 1px solid #eee;
-}
-
-.wine_modal_image {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  height: 120px;
-  pointer-events: none;
-  z-index: 1;
 }
 
 .border-line {
@@ -101,8 +110,28 @@ hr {
   height: 0;
 }
 
+/* Login form styles */
 .login-form,
 .login-form-label,
 .login-reg-link {
   font-size: 0.9rem;
+}
+
+/* Navbar styles */
+/* User navigation dropdown styles */
+#user-nav-dropdown.dropdown-toggle.nav-link {
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.nav-separator {
+  border-left: 1px solid #ccc;
+  padding-left: 1rem;
+  margin-left: 1rem;
+}
+
+/* Dropdown caret styles */
+.no-caret .dropdown-toggle::after {
+  display: none !important;
 }

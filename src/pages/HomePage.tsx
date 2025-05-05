@@ -1,17 +1,37 @@
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import eCellar from '../assets/eCellar.png'
+import { motion } from 'framer-motion'
+import { UserInfo } from '../types/UserInfo'
+import { useNavigate } from 'react-router-dom'
 
-const HomePage = () => {
+interface HomePageProps {
+  user: UserInfo | null
+  onLoginClick: () => void
+}
+
+const HomePage = ({ user, onLoginClick }: HomePageProps) => {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    if (user) {
+      navigate('/cellars')
+    } else {
+      onLoginClick()
+    }
+  }
   return (
     <Container
       fluid
-      className="d-flex flex-column align-items-center text-center pt-5"
-      style={{ minHeight: '100vh' }}
+      className="d-flex flex-column align-items-center text-center mt-5 "
+      style={{ minHeight: '100vh', paddingTop: '150px' }}
     >
-      <img
+      <motion.img
         src={eCellar}
         alt="eCellar"
-        style={{ width: '50vw', maxWidth: '500px' }}
+        initial={{ opacity: 0, y: -80 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.4, ease: 'easeOut' }}
+        style={{ width: '50vw', maxWidth: '400px' }}
         className="mb-4"
       />
 
@@ -38,7 +58,7 @@ const HomePage = () => {
 
       <Row className="justify-content-center">
         <Col xs="auto">
-          <Button variant="dark" size="lg">
+          <Button variant="dark" size="lg" onClick={handleClick}>
             Start Your Cellar
           </Button>
         </Col>

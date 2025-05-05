@@ -1,10 +1,10 @@
 import { FormEvent, useState } from 'react'
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
+import { Modal, Button, Form } from 'react-bootstrap'
 import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
 import ErrorAlert from './ErrorAlert'
-import eCellar_logo from '../assets/Logo eCellar.png'
-import wine_modal_image from '../assets/Wine modal image.png'
+import eCellar_logo from '../assets/logo_eCellar.png'
+import wine_modal_image from '../assets/wine_modal_image.png'
 import { UserInfo } from '../types/UserInfo'
 
 interface LoginModalProps {
@@ -39,7 +39,7 @@ const LoginModal = (props: LoginModalProps) => {
       localStorage.setItem('username', response.username)
       localStorage.setItem('name', response.name)
       localStorage.setItem('userId', response.userId)
-      localStorage.setItem('profilePicture', response.profilePicture)
+      localStorage.setItem('profilePicture', response.profilePicture || '')
 
       // This updates the global user state
       props.setUser({
