@@ -33,7 +33,7 @@ h1 {
 /* Form input styles */
 .form-control {
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid #cccccc;
   padding: 0.75rem 1rem;
 }
 
@@ -99,4 +99,10 @@ hr {
 .border-line {
   border-bottom: 1px solid #dee2e6;
   height: 0;
+}
+
+.login-form,
+.login-form-label,
+.login-reg-link {
+  font-size: 0.9rem;
 }

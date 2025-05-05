@@ -5,11 +5,13 @@ import { LoginRequest } from '../types/AuthTypes'
 import ErrorAlert from './ErrorAlert'
 import eCellar_logo from '../assets/Logo eCellar.png'
 import wine_modal_image from '../assets/Wine modal image.png'
+import { UserInfo } from '../types/UserInfo'
 
 interface LoginModalProps {
   showLoginModal: boolean
   handleClose: () => void
-  onSignUpClick: () => void // Add this prop for sign up functionality
+  onSignUpClick: () => void
+  setUser: (user: UserInfo) => void
 }
 
 const LoginModal = (props: LoginModalProps) => {
@@ -38,6 +40,14 @@ const LoginModal = (props: LoginModalProps) => {
       localStorage.setItem('name', response.name)
       localStorage.setItem('userId', response.userId)
       localStorage.setItem('profilePicture', response.profilePicture)
+
+      // This updates the global user state
+      props.setUser({
+        name: response.name,
+        username: response.username,
+        userId: response.userId,
+        profilePicture: response.profilePicture,
+      })
 
       setError('')
       props.handleClose()
@@ -129,9 +139,9 @@ const LoginModal = (props: LoginModalProps) => {
           {/* Error and form */}
           {error && <ErrorAlert message={error} />}
 
-          <Form onSubmit={handleSubmit}>
+          <Form className="login-form" onSubmit={handleSubmit}>
             <Form.Group controlId="email" className="mb-3">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label className="mb-1 opacity-50">Email address</Form.Label>
               <Form.Control
                 type="email"
                 name="email"
@@ -141,12 +151,12 @@ const LoginModal = (props: LoginModalProps) => {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 required
-                className="py-2"
+                className="login-form-label py-2 opacity-75"
               />
             </Form.Group>
 
             <Form.Group controlId="password" className="mb-4">
-              <Form.Label>Password</Form.Label>
+              <Form.Label className="mb-1 opacity-50">Password</Form.Label>
               <Form.Control
                 type="password"
                 name="password"
@@ -156,7 +166,7 @@ const LoginModal = (props: LoginModalProps) => {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 required
-                className="py-2"
+                className="login-form-label py-2 opacity-75"
               />
             </Form.Group>
 
@@ -168,7 +178,7 @@ const LoginModal = (props: LoginModalProps) => {
           </Form>
 
           {/* Sign up link */}
-          <div className="mt-3">
+          <div className="login-reg-link mt-4">
             Don't have an account?{' '}
             <button
               onClick={props.onSignUpClick}
