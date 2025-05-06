@@ -9,7 +9,7 @@ interface EcellaNavbarProps {
   onLogout: () => void
 }
 
-function EcellaNavbar({ user, onLoginClick, onLogout }: EcellaNavbarProps) {
+function EcellaNavbar(props: EcellaNavbarProps) {
   return (
     <Navbar bg="light" className="shadow-lg z-3 py-2" fixed="top">
       <Container>
@@ -17,10 +17,12 @@ function EcellaNavbar({ user, onLoginClick, onLogout }: EcellaNavbarProps) {
           <span style={{ color: 'darkred' }}>e</span>Cellar
         </Navbar.Brand>
         <Nav className="ms-auto align-items-center">
-          {user ? (
+          {props.user ? (
             <>
               {/* User avatar and dropdown */}
-              <Nav.Link href="/me">Hi, {user.name.split(' ')[0]}</Nav.Link>
+              <Nav.Link href="/me">
+                Hi, {props.user.name.split(' ')[0]}
+              </Nav.Link>
               <NavDropdown
                 id="user-nav-dropdown"
                 align="end"
@@ -29,8 +31,8 @@ function EcellaNavbar({ user, onLoginClick, onLogout }: EcellaNavbarProps) {
                   <span className="d-inline-flex align-items-center p-0 m-0">
                     <Image
                       src={
-                        user.profilePicture?.trim()
-                          ? user.profilePicture
+                        props.user.profilePicture?.trim()
+                          ? props.user.profilePicture
                           : userPlaceholder
                       }
                       roundedCircle
@@ -51,10 +53,12 @@ function EcellaNavbar({ user, onLoginClick, onLogout }: EcellaNavbarProps) {
                   </span>
                 }
               >
-                <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/me">Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={onLogout}>Log out</NavDropdown.Item>
+                <NavDropdown.Item href="/" onClick={props.onLogout}>
+                  Log out
+                </NavDropdown.Item>
               </NavDropdown>
 
               {/* Navigation links visible only when logged in */}
@@ -67,7 +71,7 @@ function EcellaNavbar({ user, onLoginClick, onLogout }: EcellaNavbarProps) {
             </>
           ) : (
             // Login link visible when not logged in
-            <Nav.Link onClick={onLoginClick}>Log in</Nav.Link>
+            <Nav.Link onClick={props.onLoginClick}>Log in</Nav.Link>
           )}
         </Nav>
       </Container>

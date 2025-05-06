@@ -2,6 +2,12 @@
 export interface UserInfo {
   name: string
   username: string
-  userId: string // UUID as string
-  profilePicture: string
+  userId: string
+  profilePicture?: string
+
+  // Additional fields from UserUpdatePayload
+  phone?: string
+  bio?: string
+  location?: string
+  shippingAddress?: string
 }

@@ -8,8 +8,8 @@ interface ErrorAlertProps {
 
 // This functional component takes a message prop and returns a Bootstrap alert component
 // It uses the Alert component from react-bootstrap to display the error message
-const ErrorAlert = ({ message }: ErrorAlertProps) => {
-  return <Alert variant="danger">{message}</Alert>
+const ErrorAlert = (props: ErrorAlertProps) => {
+  return <Alert variant="danger">{props.message}</Alert>
 }
 
 export default ErrorAlert

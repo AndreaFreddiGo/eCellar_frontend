@@ -9,14 +9,14 @@ interface HomePageProps {
   onLoginClick: () => void
 }
 
-const HomePage = ({ user, onLoginClick }: HomePageProps) => {
+const HomePage = (props: HomePageProps) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (user) {
+    if (props.user) {
       navigate('/cellars')
     } else {
-      onLoginClick()
+      props.onLoginClick()
     }
   }
   return (
