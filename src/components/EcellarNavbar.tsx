@@ -65,7 +65,7 @@ function EcellaNavbar(props: EcellaNavbarProps) {
               <Nav.Link href="/cellars" className="nav-separator ms-2">
                 your cellars
               </Nav.Link>
-              <Nav.Link href="/search" className="nav-separator m-0">
+              <Nav.Link href="/wines" className="nav-separator m-0">
                 search wine
               </Nav.Link>
             </>
