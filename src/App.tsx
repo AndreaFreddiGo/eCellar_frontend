@@ -12,6 +12,7 @@ import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import UserProfile from './pages/UserProfile'
 import WinesSearchPage from './pages/WinesSearchPage'
+import EcellarFooter from './components/EcellarFooter'
 
 function App() {
   const [user, setUser] = useState<UserInfo | null>(null)
@@ -90,6 +91,7 @@ function App() {
         />
         <Route path="/wines" element={<WinesSearchPage />} />
       </Routes>
+      <EcellarFooter />
     </BrowserRouter>
   )
 }
