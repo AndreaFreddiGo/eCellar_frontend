@@ -1,16 +1,13 @@
-/* Global styles */
+/* ======================
+   GLOBAL STYLES 
+   ====================== */
 body {
   background-image: url(./assets/eCellar_background.png);
   background-size: cover;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.5
-  ); /* Adds a semi-transparent overlay */
-  background-blend-mode: overlay; /* Blends the color with the image */
+  background-color: rgba(255, 255, 255, 0.5);
+  background-blend-mode: overlay;
   font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial',
-    'sans-serif';
+    sans-serif;
   font-weight: 400;
 }
 
@@ -30,9 +27,35 @@ h1 {
   font-weight: 500;
 }
 
-/* Modal styles */
+/* ======================
+     NAVBAR STYLES 
+     ====================== */
+:root {
+  --navbar-height: 56px; /* Bootstrap default navbar height */
+}
+
+/* User navigation dropdown */
+#user-nav-dropdown.dropdown-toggle.nav-link {
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.nav-separator {
+  border-left: 1px solid #ccc;
+  padding-left: 1rem;
+  margin-left: 1rem;
+}
+
+/* Dropdown caret */
+.no-caret .dropdown-toggle::after {
+  display: none !important;
+}
+
+/* ======================
+     MODAL STYLES 
+     ====================== */
 .eCellar-modal .modal-content {
-  background: #ffffff;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 1) 30%,
@@ -59,7 +82,9 @@ h1 {
   z-index: 1;
 }
 
-/* Form styles */
+/* ======================
+     FORM STYLES 
+     ====================== */
 .form-control {
   border-radius: 8px;
   border: 1px solid #cccccc;
@@ -71,6 +96,9 @@ h1 {
   box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
 }
 
+/* ======================
+     BUTTON STYLES 
+     ====================== */
 /* Social buttons */
 .google-btn {
   border: 1px solid #dadce0;
@@ -97,7 +125,6 @@ h1 {
   color: white;
 }
 
-/* Login button styles */
 .login-button {
   background-color: #8b0000;
   border: none;
@@ -111,43 +138,9 @@ h1 {
   color: white;
 }
 
-/* Divider styles */
-hr {
-  border-top: 1px solid #eee;
-}
-
-.border-line {
-  border-bottom: 1px solid #dee2e6;
-  height: 0;
-}
-
-/* Login form styles */
-.login-form,
-.login-form-label,
-.login-reg-link {
-  font-size: 0.9rem;
-}
-
-/* Navbar styles */
-/* User navigation dropdown styles */
-#user-nav-dropdown.dropdown-toggle.nav-link {
-  padding: 0 !important;
-  margin: 0 !important;
-  line-height: 1 !important;
-}
-
-.nav-separator {
-  border-left: 1px solid #ccc;
-  padding-left: 1rem;
-  margin-left: 1rem;
-}
-
-/* Dropdown caret styles */
-.no-caret .dropdown-toggle::after {
-  display: none !important;
-}
-
-/* Wine-card styles */
+/* ======================
+     WINE CARD STYLES 
+     ====================== */
 .wine-card {
   background: #ffffff;
   border-radius: 12px;
@@ -156,15 +149,155 @@ hr {
   transition: box-shadow 0.3s ease;
   text-align: end;
 }
+
 .wine-card:hover {
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Footer styles */
+/* ======================
+     PROFILE PAGE STYLES 
+     ====================== */
+/* Container */
+.profile-container {
+  padding-bottom: 3rem;
+}
+
+/* Spacer to prevent navbar overlap */
+.profile-top-spacer {
+  height: calc(var(--navbar-height) + 2rem);
+  width: 100%;
+}
+
+/* Empty State */
+.profile-empty-state {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Header Section */
+.profile-header {
+  margin-top: 2rem;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.03);
+}
+
+.profile-user-info {
+  padding-left: 2rem;
+}
+
+.profile-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #343a40;
+  font-size: 2rem;
+}
+
+.profile-username {
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+/* Profile Card */
+.profile-card {
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.profile-section-title {
+  color: darkred;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+  font-weight: 600;
+}
+
+/* Profile Fields */
+.profile-field {
+  margin-bottom: 1.5rem;
+}
+
+.profile-field-label {
+  color: #495057;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.profile-field-value {
+  color: #212529;
+  margin-bottom: 0;
+  word-break: break-word;
+}
+
+.profile-field-empty {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+/* ======================
+     FOOTER STYLES 
+     ====================== */
 .ecellar-footer {
   flex-shrink: 0;
 }
 
+.footer-logo {
+  max-width: 150px;
+  height: auto;
+}
+
+.footer-link {
+  color: #212529;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: darkred;
+  text-decoration: underline;
+}
+
 .text-darkred {
   color: darkred;
+}
+
+.social-icons a {
+  color: darkred;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #a00;
+}
+
+/* ======================
+     UTILITY CLASSES 
+     ====================== */
+.text-darkred {
+  color: darkred;
+}
+
+.border-line {
+  border-bottom: 1px solid #dee2e6;
+  height: 0;
+}
+
+hr {
+  border-top: 1px solid #eee;
 }

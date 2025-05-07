@@ -1,48 +1,117 @@
-import { Container, Row, Col, ListGroupItem } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
+import logo_eCellar from '../assets/logo_eCellar.png'
 
 function EcellarFooter() {
   return (
-    <footer className="ecellar-footer bg-light text-dark mt-5 pt-4">
+    <footer className="ecellar-footer bg-light text-dark pt-5 mt-5">
       <Container>
-        <Row>
-          <Col className="col-12 col-lg-8 mx-lg-auto text-center text-lg-start mb-3">
-            <i className="bi bi-facebook me-3 fs-4 text-darkred"></i>
-            <i className="bi bi-instagram me-3 fs-4 text-darkred"></i>
-            <i className="bi bi-twitter me-3 fs-4 text-darkred"></i>
-            <i className="bi bi-youtube fs-4 text-darkred"></i>
+        <Row className="mb-4">
+          <Col md={3} className="mb-3">
+            <img
+              src={logo_eCellar}
+              alt="eCellar Logo"
+              className="footer-logo"
+            />
+          </Col>
+          <Col md={3} className="mb-3">
+            <h6 className="text-uppercase fw-bold mb-3">Company</h6>
+            <ul className="list-unstyled">
+              <li>
+                <a href="/about" className="footer-link">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="/careers" className="footer-link">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="/press" className="footer-link">
+                  Press
+                </a>
+              </li>
+              <li>
+                <a href="/contact" className="footer-link">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </Col>
+          <Col md={3} className="mb-3">
+            <h6 className="text-uppercase fw-bold mb-3">Community</h6>
+            <ul className="list-unstyled">
+              <li>
+                <a href="/blog" className="footer-link">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="/guides" className="footer-link">
+                  Wine Guides
+                </a>
+              </li>
+              <li>
+                <a href="/events" className="footer-link">
+                  Events
+                </a>
+              </li>
+              <li>
+                <a href="/faq" className="footer-link">
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </Col>
+          <Col md={3} className="mb-3">
+            <h6 className="text-uppercase fw-bold mb-3">Legal</h6>
+            <ul className="list-unstyled">
+              <li>
+                <a href="/terms" className="footer-link">
+                  Terms of Use
+                </a>
+              </li>
+              <li>
+                <a href="/privacy" className="footer-link">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="/cookies" className="footer-link">
+                  Cookie Policy
+                </a>
+              </li>
+              <li>
+                <a href="/sitemap" className="footer-link">
+                  Sitemap
+                </a>
+              </li>
+            </ul>
           </Col>
         </Row>
-        <Row className="mb-3 text-center text-lg-start">
-          {[
-            ['Audio and Subtitles', 'Media Center', 'Privacy', 'Contact Us'],
-            ['Audio Description', 'Investor Relations', 'Legal Notices'],
-            ['Help Center', 'Jobs', 'Cookie Preferences'],
-            ['Gift Cards', 'Terms of Use', 'Corporate Information'],
-          ].map((column, idx) => (
-            <Col key={idx} className="col-12 col-lg-2 offset-lg-2 text-dark">
-              {column.map((item, i) => (
-                <ListGroupItem
-                  key={i}
-                  className="bg-light border-0 text-dark py-1 ps-0"
-                >
-                  {item}
-                </ListGroupItem>
-              ))}
-            </Col>
-          ))}
-        </Row>
-        <Row>
-          <Col className="col-12 col-lg-8 mx-lg-auto text-center text-lg-start">
-            <p className="d-inline-block px-2 py-1 my-3 border border-1 border-dark text-dark">
-              Service Code
-            </p>
+
+        <hr />
+
+        <Row className="align-items-center">
+          <Col md={6} className="mb-3 mb-md-0 text-center text-md-start">
+            <div className="social-icons">
+              <a href="https://facebook.com" className="me-3 text-darkred">
+                <i className="bi bi-facebook fs-4"></i>
+              </a>
+              <a href="https://instagram.com" className="me-3 text-darkred">
+                <i className="bi bi-instagram fs-4"></i>
+              </a>
+              <a href="https://twitter.com" className="me-3 text-darkred">
+                <i className="bi bi-twitter fs-4"></i>
+              </a>
+              <a href="https://youtube.com" className="text-darkred">
+                <i className="bi bi-youtube fs-4"></i>
+              </a>
+            </div>
           </Col>
-        </Row>
-        <Row>
-          <Col className="col-12 col-lg-8 mx-lg-auto text-center text-lg-start pb-4">
+          <Col md={6} className="text-center text-md-end">
             <p className="mb-0">
-              <i className="bi bi-c-circle me-1"></i>1997–2019 Netflix, Inc.
-              i-0d00fcda2fdf9c0de
+              &copy; {new Date().getFullYear()} eCellar. All rights reserved.
             </p>
           </Col>
         </Row>
