@@ -11,6 +11,7 @@ import { UserInfo } from './types/UserInfo'
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import UserProfile from './pages/UserProfile'
+import WinesSearchPage from './pages/WinesSearchPage'
 
 function App() {
   const [user, setUser] = useState<UserInfo | null>(null)
@@ -87,6 +88,7 @@ function App() {
             )
           }
         />
+        <Route path="/wines" element={<WinesSearchPage />} />
       </Routes>
     </BrowserRouter>
   )
