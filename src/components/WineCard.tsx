@@ -8,7 +8,7 @@ interface WineCardProps {
 
 const WineCard = (props: WineCardProps) => {
   return (
-    <Card className="h-100 shadow-lg">
+    <Card className="wine-card h-100">
       {props.wine.imageUrl && (
         <Card.Img
           variant="top"

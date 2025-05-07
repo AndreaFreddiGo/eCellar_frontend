@@ -135,3 +135,16 @@ hr {
 .no-caret .dropdown-toggle::after {
   display: none !important;
 }
+
+/* Wine-card styles */
+.wine-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  transition: box-shadow 0.3s ease;
+  text-align: end;
+}
+.wine-card:hover {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+}
