@@ -1,6 +1,7 @@
 // src/services/userService.ts
 import axios from 'axios'
 import { UserInfo } from '../types/UserInfo'
+import { UserUpdatePayload } from '../types/UserUpdatePayload'
 
 // Base API URL for authentication
 const BASE_URL = 'http://localhost:3001/users'
@@ -13,6 +14,17 @@ export const getCurrentUser = async (): Promise<UserInfo> => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  })
+  return response.data
+}
+
+export const updateUserInfo = async (
+  userId: string,
+  userData: UserUpdatePayload
+): Promise<UserInfo> => {
+  const token = localStorage.getItem('token')
+  const response = await axios.put(`${BASE_URL}/${userId}`, userData, {
+    headers: { Authorization: `Bearer ${token}` },
   })
   return response.data
 }

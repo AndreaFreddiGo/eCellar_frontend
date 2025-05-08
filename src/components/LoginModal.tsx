@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
@@ -6,6 +6,7 @@ import { AuthUser } from '../types/AuthUser'
 import ErrorAlert from './ErrorAlert'
 import eCellar_logo from '../assets/logo_eCellar.png'
 import wine_modal_image from '../assets/wine_modal_image.png'
+import axios, { AxiosError } from 'axios'
 
 interface LoginModalProps {
   showLoginModal: boolean
@@ -52,11 +53,19 @@ const LoginModal = (props: LoginModalProps) => {
     } catch (err) {
       if (typeof err === 'object' && err !== null && 'message' in err) {
         setError((err as { message: string }).message)
+      } else if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setError(err.response.data.message)
       } else {
         setError('An unexpected error occurred')
       }
     }
   }
+
+  useEffect(() => {
+    if (props.showLoginModal) {
+      setError('') // Reset error when modal is reopened
+    }
+  }, [props.showLoginModal])
 
   return (
     <Modal
