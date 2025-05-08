@@ -11,10 +11,12 @@ import {
 import { UserInfo } from '../types/UserInfo'
 import userPlaceholder from '../assets/user_placeholder.png'
 import { getCurrentUser } from '../services/userService'
+import UpdateProfileModal from '../components/UpdateProfileModal'
 
 function UserProfile() {
   const [user, setUser] = useState<UserInfo | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showUpdateModal, setShowUpdateModal] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -120,9 +122,7 @@ function UserProfile() {
                     <Button
                       variant="dark"
                       className="rounded-5 px-4 py-2"
-                      onClick={() => {
-                        console.log('Update Profile clicked')
-                      }}
+                      onClick={() => setShowUpdateModal(true)}
                     >
                       Update Profile
                     </Button>
@@ -133,6 +133,13 @@ function UserProfile() {
           </Card>
         </Col>
       </Row>
+
+      <UpdateProfileModal
+        show={showUpdateModal}
+        handleClose={() => setShowUpdateModal(false)}
+        currentUser={user}
+        onUpdate={(updatedUser) => setUser(updatedUser)}
+      />
     </Container>
   )
 }
