@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Container, Row, Col, Image, Card, Spinner } from 'react-bootstrap'
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Card,
+  Spinner,
+  Button,
+} from 'react-bootstrap'
 import { UserInfo } from '../types/UserInfo'
 import userPlaceholder from '../assets/user_placeholder.png'
 import { getCurrentUser } from '../services/userService'
@@ -43,30 +51,55 @@ function UserProfile() {
   return (
     <Container className="profile-container">
       <div className="profile-top-spacer"></div>
-      <Row className="justify-content-center mb-5 align-items-center profile-header">
-        <Col xs="auto">
-          <Image
-            src={user.profilePicture?.trim() || userPlaceholder}
-            roundedCircle
-            className="profile-avatar"
-          />
-        </Col>
-        <Col xs="auto" className="profile-user-info">
-          <h1 className="profile-name">
-            {user.name} {user.surname}
-          </h1>
-          {user.username && (
-            <p className="profile-username">@{user.username}</p>
-          )}
-        </Col>
-      </Row>
 
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <Card className="profile-card">
+      <Row className="justify-content-between">
+        {/* Left Column - Avatar and Basic Info */}
+        <Col md={4} className="pe-md-4 mb-4 mb-md-0">
+          <div className="d-flex flex-column align-items-center align-items-md-center">
+            <Image
+              src={user.profilePicture?.trim() || userPlaceholder}
+              roundedCircle
+              className="profile-avatar mb-3"
+            />
+            <div className="text-center text-md-start">
+              <h1 className="profile-name mb-1">
+                {user.name} {user.surname}
+              </h1>
+              {user.username && (
+                <p className="profile-username mb-3">@{user.username}</p>
+              )}
+            </div>
+          </div>
+        </Col>
+
+        {/* Right Column - Profile Details */}
+        <Col md={8}>
+          <Card className="profile-card h-100">
             <Card.Body>
-              <h4 className="profile-section-title">Profile Details</h4>
-              <Row className="g-3">
+              <h4 className="profile-section-title mb-4">Profile Details</h4>
+              <Row>
+                <Col md={6}>
+                  <ProfileField
+                    label="Name"
+                    value={user.name}
+                    fallback="Not provided"
+                  />
+                  <ProfileField
+                    label="Surname"
+                    value={user.surname}
+                    fallback="Not provided"
+                  />
+                  <ProfileField
+                    label="Username"
+                    value={`@${user.username}`}
+                    fallback="Not provided"
+                  />
+                  <ProfileField
+                    label="Email"
+                    value={user.email}
+                    fallback="Not provided"
+                  />
+                </Col>
                 <Col md={6}>
                   <ProfileField
                     label="Phone"
@@ -74,22 +107,26 @@ function UserProfile() {
                     fallback="Not provided"
                   />
                   <ProfileField
-                    label="Location"
-                    value={user.location}
-                    fallback="Not specified"
+                    label="Birthdate"
+                    value={user.birthDate}
+                    fallback="Not provided"
                   />
-                </Col>
-                <Col md={6}>
                   <ProfileField
-                    label="Bio"
-                    value={user.bio}
+                    label="Biography"
+                    value={user.biography}
                     fallback="No bio available"
                   />
-                  <ProfileField
-                    label="Shipping Address"
-                    value={user.shippingAddress}
-                    fallback="Not set"
-                  />
+                  <div className="d-flex justify-content-start mt-4">
+                    <Button
+                      variant="dark"
+                      className="rounded-5 px-4 py-2"
+                      onClick={() => {
+                        console.log('Update Profile clicked')
+                      }}
+                    >
+                      Update Profile
+                    </Button>
+                  </div>
                 </Col>
               </Row>
             </Card.Body>
@@ -110,8 +147,8 @@ function ProfileField({
   fallback: string
 }) {
   return (
-    <div className="profile-field">
-      <h6 className="profile-field-label">{label}</h6>
+    <div className="profile-field mb-3">
+      <h6 className="profile-field-label mb-1">{label}</h6>
       <p className="profile-field-value">
         {value || <span className="profile-field-empty">{fallback}</span>}
       </p>

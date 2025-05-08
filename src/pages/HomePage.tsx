@@ -1,11 +1,11 @@
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import eCellar from '../assets/eCellar.png'
 import { motion } from 'framer-motion'
-import { UserInfo } from '../types/UserInfo'
 import { useNavigate } from 'react-router-dom'
+import { AuthUser } from '../types/AuthUser'
 
 interface HomePageProps {
-  user: UserInfo | null
+  user: AuthUser | null
   onLoginClick: () => void
 }
 
@@ -58,7 +58,11 @@ const HomePage = (props: HomePageProps) => {
 
       <Row className="justify-content-center">
         <Col xs="auto">
-          <Button variant="dark" size="lg" onClick={handleClick}>
+          <Button
+            className="btn btn-dark rounded-5 shadow-lg"
+            size="lg"
+            onClick={handleClick}
+          >
             Start Your Cellar
           </Button>
         </Col>

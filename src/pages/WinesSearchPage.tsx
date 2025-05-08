@@ -4,6 +4,7 @@ import { Container, Form, Row, Col, Spinner } from 'react-bootstrap'
 import { searchWines } from '../services/wineService'
 import { WineDTO } from '../types/WineDTO'
 import WineCard from '../components/WineCard'
+import logo_eCellar from '../assets/logo_eCellar.png'
 
 const WinesSearchPage = () => {
   const [query, setQuery] = useState('')
@@ -40,7 +41,7 @@ const WinesSearchPage = () => {
       <h2 className="mb-3" style={{ color: 'darkred' }}>
         Search Wines
       </h2>
-      <Form>
+      <Form onSubmit={(e) => e.preventDefault()}>
         <Form.Control
           type="text"
           placeholder="Search by name, producer, grape..."
@@ -48,10 +49,13 @@ const WinesSearchPage = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </Form>
-
       {loading && (
         <div className="text-center mt-4">
-          <Spinner animation="border" variant="secondary" />{' '}
+          <img
+            src={logo_eCellar}
+            alt="logo_eCellar"
+            className="spinner spinner-border border-0"
+          />{' '}
           <span>Loading...</span>
         </div>
       )}

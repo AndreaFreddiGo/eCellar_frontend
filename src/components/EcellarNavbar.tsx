@@ -1,21 +1,40 @@
 // EcellaNavbar.tsx
-import { Container, Nav, Navbar, NavDropdown, Image } from 'react-bootstrap'
-import { UserInfo } from '../types/UserInfo'
+import {
+  Container,
+  Nav,
+  Navbar,
+  NavDropdown,
+  Image,
+  Form,
+} from 'react-bootstrap'
 import userPlaceholder from '../assets/user_placeholder.png'
+import { useState } from 'react'
+import { AuthUser } from '../types/AuthUser'
 
 interface EcellaNavbarProps {
-  user: UserInfo | null
+  user: AuthUser | null
   onLoginClick: () => void
   onLogout: () => void
+  currentTheme: 'light' | 'dark' // Specifica i valori possibili
+  onThemeChange: (theme: 'light' | 'dark') => void // Tipo della funzione
 }
 
 function EcellaNavbar(props: EcellaNavbarProps) {
+  // Language switch state
+  const [language, setLanguage] = useState<'ENG' | 'ITA'>('ENG')
+
+  // Handle switch between ENG and ITA
+  const toggleLanguage = (lang: 'ENG' | 'ITA') => {
+    setLanguage(lang)
+  }
+
   return (
     <Navbar bg="light" className="shadow-lg z-3 py-2" fixed="top">
       <Container>
         <Navbar.Brand href="/">
           <span style={{ color: 'darkred' }}>e</span>Cellar
         </Navbar.Brand>
+
         <Nav className="ms-auto align-items-center">
           {props.user ? (
             <>
@@ -31,7 +50,7 @@ function EcellaNavbar(props: EcellaNavbarProps) {
                   <span className="d-inline-flex align-items-center p-0 m-0">
                     <Image
                       src={
-                        props.user.profilePicture?.trim()
+                        props.user?.profilePicture?.trim()
                           ? props.user.profilePicture
                           : userPlaceholder
                       }
@@ -45,7 +64,6 @@ function EcellaNavbar(props: EcellaNavbarProps) {
                       }}
                       className="p-0 m-0"
                     />
-                    {/* Custom caret centered manually */}
                     <i
                       className="bi bi-caret-down-fill ms-1"
                       style={{ fontSize: '0.6rem' }}
@@ -54,9 +72,24 @@ function EcellaNavbar(props: EcellaNavbarProps) {
                 }
               >
                 <NavDropdown.Item href="/me">Profile</NavDropdown.Item>
-                <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+
+                <NavDropdown.ItemText className="px-3 py-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span className="small">Dark Mode</span>
+                    <Form.Check
+                      type="switch"
+                      id="theme-switch"
+                      checked={props.currentTheme === 'dark'}
+                      onChange={(e) =>
+                        props.onThemeChange(e.target.checked ? 'dark' : 'light')
+                      }
+                      label=""
+                    />
+                  </div>
+                </NavDropdown.ItemText>
+
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/" onClick={props.onLogout}>
+                <NavDropdown.Item onClick={props.onLogout}>
                   Log out
                 </NavDropdown.Item>
               </NavDropdown>
@@ -73,6 +106,26 @@ function EcellaNavbar(props: EcellaNavbarProps) {
             // Login link visible when not logged in
             <Nav.Link onClick={props.onLoginClick}>Log in</Nav.Link>
           )}
+          {/* Language switch visible for all users */}
+          <div className="language-switch ms-5 text-uppercase fw-medium">
+            <span
+              onClick={() => toggleLanguage('ENG')}
+              className={
+                language === 'ENG' ? 'fw-bold text-dark' : 'text-muted'
+              }
+            >
+              ENG
+            </span>
+            <span className="mx-1 text-muted">/</span>
+            <span
+              onClick={() => toggleLanguage('ITA')}
+              className={
+                language === 'ITA' ? 'fw-bold text-dark' : 'text-muted'
+              }
+            >
+              ITA
+            </span>
+          </div>
         </Nav>
       </Container>
     </Navbar>

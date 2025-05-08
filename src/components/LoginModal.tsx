@@ -2,53 +2,51 @@ import { FormEvent, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 import { login } from '../services/authService'
 import { LoginRequest } from '../types/AuthTypes'
+import { AuthUser } from '../types/AuthUser'
 import ErrorAlert from './ErrorAlert'
 import eCellar_logo from '../assets/logo_eCellar.png'
 import wine_modal_image from '../assets/wine_modal_image.png'
-import { UserInfo } from '../types/UserInfo'
 
 interface LoginModalProps {
   showLoginModal: boolean
   handleClose: () => void
   onSignUpClick: () => void
-  setUser: (user: UserInfo) => void
+  setUser: (user: AuthUser) => void
 }
 
 const LoginModal = (props: LoginModalProps) => {
-  // This is the state for the form data
-  // It uses the LoginRequest interface to define the structure of the data
+  // This is the state for the login form fields (email and password)
   const [formData, setFormData] = useState<LoginRequest>({
     email: '',
     password: '',
   })
 
-  // Error message
+  // This state handles any error that might occur during login
   const [error, setError] = useState('')
 
-  // This function handles the form submission
-  // It prevents the default form submission behavior and calls the login function
-  // It is a promise-based function that handles the login process
-  // If the login is successful, it saves the token and user info to localStorage
+  // This function handles the login form submission
+  // It sends the credentials to the backend and handles the response
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     try {
       const response = await login(formData)
 
-      // It saves login info to localStorage
+      // Save minimal user data to localStorage for persistence
       localStorage.setItem('token', response.token)
-      localStorage.setItem('username', response.username)
-      localStorage.setItem('name', response.name)
       localStorage.setItem('userId', response.userId)
+      localStorage.setItem('name', response.name)
+      localStorage.setItem('username', response.username)
       localStorage.setItem('profilePicture', response.profilePicture || '')
 
-      // This updates the global user state
+      // Update the global user state with minimal user info
       props.setUser({
+        userId: response.userId,
         name: response.name,
         username: response.username,
-        userId: response.userId,
         profilePicture: response.profilePicture,
       })
 
+      // Clear any existing error and close the modal
       setError('')
       props.handleClose()
     } catch (err) {
@@ -80,6 +78,7 @@ const LoginModal = (props: LoginModalProps) => {
           className="p-0 m-0 mb-auto"
         ></Button>
       </Modal.Header>
+
       <Modal.Body className="p-5 d-flex position-relative">
         {/* Left side - Login form */}
         <div className="w-100 pe-5" style={{ maxWidth: '60%' }}>
@@ -89,10 +88,11 @@ const LoginModal = (props: LoginModalProps) => {
             </h4>
           </div>
 
-          {/* Social Buttons */}
+          {/* Social login buttons */}
           <div className="d-flex flex-column gap-3 mb-4">
             <Button className="google-btn d-flex align-items-center justify-content-center py-2">
               <span className="google-icon d-flex align-items-center">
+                {/* Google SVG Icon */}
                 <svg width="18" height="18" viewBox="0 0 48 48">
                   <path
                     fill="#EA4335"
@@ -116,6 +116,7 @@ const LoginModal = (props: LoginModalProps) => {
             </Button>
 
             <Button className="facebook-btn d-flex align-items-center justify-content-center py-2 text-white">
+              {/* Facebook SVG Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -136,9 +137,10 @@ const LoginModal = (props: LoginModalProps) => {
             <div className="flex-grow-1 border-line" />
           </div>
 
-          {/* Error and form */}
+          {/* Error alert */}
           {error && <ErrorAlert message={error} />}
 
+          {/* Login form */}
           <Form className="login-form" onSubmit={handleSubmit}>
             <Form.Group controlId="email" className="mb-3">
               <Form.Label className="mb-1 opacity-50">Email address</Form.Label>
@@ -177,7 +179,7 @@ const LoginModal = (props: LoginModalProps) => {
             </div>
           </Form>
 
-          {/* Sign up link */}
+          {/* Link to sign up modal */}
           <div className="login-reg-link mt-4">
             Don't have an account?{' '}
             <button
@@ -195,7 +197,7 @@ const LoginModal = (props: LoginModalProps) => {
           <div className="h-100 w-100 rounded-end d-flex align-items-center justify-content-center">
             <img
               src={wine_modal_image}
-              alt="wine modal image"
+              alt="wine modal"
               style={{ height: '500px' }}
               className="wine_modal_image m-4"
             />

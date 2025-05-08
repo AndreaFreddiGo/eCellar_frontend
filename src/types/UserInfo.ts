@@ -1,13 +1,15 @@
 // This file defines the UserInfo interface, which represents the structure of user information in the application
 export interface UserInfo {
+  id: string
   name: string
+  surname: string
+  email: string
   username: string
-  userId: string
-  profilePicture?: string
-
-  // Additional fields from UserUpdatePayload
+  biography?: string
   phone?: string
-  bio?: string
-  location?: string
-  shippingAddress?: string
+  birthDate?: string
+  profilePicture?: string
+  preferredLanguage?: string
+  publicProfile: boolean
+  registrationDate: string
 }
