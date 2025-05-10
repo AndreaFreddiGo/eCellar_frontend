@@ -4,7 +4,6 @@ import { UserInfo } from '../types/UserInfo'
 import { updateUserInfo } from '../services/userService'
 import ErrorAlert from './ErrorAlert'
 import { UserUpdatePayload } from '../types/UserUpdatePayload'
-import { AxiosError } from 'axios'
 
 interface UpdateProfileModalProps {
   show: boolean

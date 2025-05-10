@@ -1,6 +1,6 @@
 // SearchWinesPage.tsx
 import { useEffect, useState } from 'react'
-import { Container, Form, Row, Col, Spinner } from 'react-bootstrap'
+import { Container, Form, Row, Col } from 'react-bootstrap'
 import { searchWines } from '../services/wineService'
 import { WineDTO } from '../types/WineDTO'
 import WineCard from '../components/WineCard'

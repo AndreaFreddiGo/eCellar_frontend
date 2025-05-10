@@ -1,7 +1,7 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import logo_eCellar from '../assets/logo_eCellar.png'
 
-function EcellarFooter() {
+const EcellarFooter = () => {
   return (
     <footer className="ecellar-footer py-3">
       <Container>

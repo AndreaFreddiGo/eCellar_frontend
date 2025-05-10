@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile'
 import WinesSearchPage from './pages/WinesSearchPage'
 import EcellarFooter from './components/EcellarFooter'
 import { AuthUser } from './types/AuthUser'
+import UserCellars from './pages/UserCellars'
 
 function App() {
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -88,6 +89,7 @@ function App() {
               }
             />
             <Route path="/wines" element={<WinesSearchPage />} />
+            <Route path="/cellars" element={<UserCellars wines={[]} />} />
           </Routes>
         </main>
         <LoginModal

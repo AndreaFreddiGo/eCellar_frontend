@@ -67,11 +67,7 @@ h1 {
      MODAL STYLES 
      ====================== */
 .eCellar-modal .modal-content {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 30%,
-    rgba(244, 242, 238, 1) 100%
-  );
+  background: linear-gradient(90deg, #ffffff 30%, #f4f2ee 100%);
   border-radius: 12px;
   border: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -422,16 +418,166 @@ h1 {
   }
 }
 
-.footer-link {
-  font-size: 0.65rem;
+/* ======================
+   CELLAR PAGE STYLES 
+   ====================== */
+
+/* Wine Cellar Styles */
+.wine-cellar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
 }
 
-.social-icons {
-  font-size: 0.8rem;
+.wine-cellar-shelf {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Adjust based on your shelf image */
+  background-image: url('./assets/wine_cellar.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 
-.copyright-text {
-  font-size: 0.6rem;
+.top-bottles-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.bottle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-image: url('./assets/wine_bottle.png');
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  position: absolute;
+}
+
+.bottle:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bottle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .wine-cellar-shelf {
+    height: 150px;
+    margin-bottom: 30px;
+  }
+}
+
+/* Exact bottle positions for the shelf pattern */
+.bottle-pos-1 {
+  top: -13%;
+  left: 33.5%;
+}
+.bottle-pos-2 {
+  top: -13%;
+  left: 46.5%;
+}
+.bottle-pos-3 {
+  top: -13%;
+  left: 59.5%;
+}
+
+.bottle-pos-4 {
+  top: 12%;
+  left: 27%;
+}
+.bottle-pos-5 {
+  top: 12%;
+  left: 40%;
+}
+.bottle-pos-6 {
+  top: 12%;
+  left: 53%;
+}
+.bottle-pos-7 {
+  top: 12%;
+  left: 66%;
+}
+
+.bottle-pos-8 {
+  top: 37%;
+  left: 33.5%;
+}
+.bottle-pos-9 {
+  top: 37%;
+  left: 46.5%;
+}
+.bottle-pos-10 {
+  top: 37%;
+  left: 59.5%;
+}
+
+.bottle-pos-11 {
+  top: 62%;
+  left: 27%;
+}
+.bottle-pos-12 {
+  top: 62%;
+  left: 40%;
+}
+.bottle-pos-13 {
+  top: 62%;
+  left: 53%;
+}
+.bottle-pos-14 {
+  top: 62%;
+  left: 66%;
+}
+
+.user-cellars-right {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.user-cellars-layout {
+  position: relative;
+  z-index: 1;
+  margin-top: 8rem;
+}
+
+.user-cellars-left {
+  flex: 1;
+}
+
+.cellar-barrels-img {
+  max-height: 1100px;
+  width: auto;
+  display: block;
+}
+
+.user-cellars-left-overlay {
+  position: absolute;
+  top: 6rem;
+  left: 2rem;
+  width: 350px;
+  z-index: 2;
+}
+
+.cellar-details-box {
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.cellar-details-box ul li a:hover {
+  color: darkred;
 }
 
 /* ======================

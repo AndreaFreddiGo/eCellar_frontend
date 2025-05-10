@@ -6,7 +6,7 @@ import { AuthUser } from '../types/AuthUser'
 import ErrorAlert from './ErrorAlert'
 import eCellar_logo from '../assets/logo_eCellar.png'
 import wine_modal_image from '../assets/wine_modal_image.png'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
 interface LoginModalProps {
   showLoginModal: boolean

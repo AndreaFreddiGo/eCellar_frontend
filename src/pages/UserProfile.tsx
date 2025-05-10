@@ -1,19 +1,12 @@
 import { useEffect, useState } from 'react'
-import {
-  Container,
-  Row,
-  Col,
-  Image,
-  Card,
-  Spinner,
-  Button,
-} from 'react-bootstrap'
+import { Container, Row, Col, Image, Card, Button } from 'react-bootstrap'
 import { UserInfo } from '../types/UserInfo'
 import userPlaceholder from '../assets/user_placeholder.png'
 import { getCurrentUser } from '../services/userService'
 import UpdateProfileModal from '../components/UpdateProfileModal'
+import logo_eCellar from '../assets/logo_eCellar.png'
 
-function UserProfile() {
+const UserProfile = () => {
   const [user, setUser] = useState<UserInfo | null>(null)
   const [loading, setLoading] = useState(true)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
@@ -36,8 +29,12 @@ function UserProfile() {
   if (loading) {
     return (
       <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-3">Loading profile...</p>
+        <img
+          src={logo_eCellar}
+          alt="logo_eCellar"
+          className="spinner spinner-border border-0"
+        />{' '}
+        <span>Loading profile...</span>
       </Container>
     )
   }
