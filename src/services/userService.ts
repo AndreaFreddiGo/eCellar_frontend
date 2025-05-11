@@ -9,7 +9,7 @@ const BASE_URL = 'http://localhost:3001/users'
 // This function handles the user profile retrieval process
 // It returns a promise with the user information
 export const getCurrentUser = async (): Promise<UserInfo> => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token') // FIXATO QUI
   const response = await axios.get(`${BASE_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,

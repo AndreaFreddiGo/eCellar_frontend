@@ -103,6 +103,49 @@ h1 {
   box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
 }
 
+.form-select:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+}
+
+.form-select option:hover {
+  background-color: #8b0000;
+  color: white;
+}
+
+.form-check-input:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+  outline: none;
+}
+
+.form-check-input:checked {
+  background-color: #8b0000;
+  border-color: #8b0000;
+}
+
+.dropdown-item:active {
+  background-color: white;
+  color: black;
+}
+
+.dropdown-item.active {
+  background-color: #ffffff;
+  color: #8b0000;
+  font-weight: 500;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #8b0000;
+  color: white;
+}
+
+/* .dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+  border-color: #aaa;
+} */
+
 /* ======================
      BUTTON STYLES 
      ====================== */
@@ -115,10 +158,13 @@ h1 {
   transition: background-color 0.2s ease;
 }
 
-.google-btn:hover {
-  background-color: #f1f3f4;
-  color: #3c4043;
-  border-color: #dadce0;
+.google-btn:hover,
+.google-btn:active {
+  background-color: #f1f3f4 !important;
+  color: #3c4043 !important;
+  border-color: #dadce0 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .facebook-btn {
@@ -127,9 +173,13 @@ h1 {
   font-weight: 500;
 }
 
-.facebook-btn:hover {
-  background-color: #2e4a89;
-  color: white;
+.facebook-btn:hover,
+.facebook-btn:active {
+  background-color: #2e4a89 !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .login-button {
@@ -140,10 +190,15 @@ h1 {
   transition: background-color 0.2s ease;
 }
 
-.login-button:hover {
-  background-color: #6f0000;
-  color: white;
+.login-button:hover,
+.login-button:active {
+  background-color: #6f0000 !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
+
 /* ======================
      WINE CARD STYLES 
    ====================== */

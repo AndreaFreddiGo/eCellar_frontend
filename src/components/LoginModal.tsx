@@ -99,7 +99,13 @@ const LoginModal = (props: LoginModalProps) => {
 
           {/* Social login buttons */}
           <div className="d-flex flex-column gap-3 mb-4">
-            <Button className="google-btn d-flex align-items-center justify-content-center py-2">
+            <Button
+              className="google-btn d-flex align-items-center justify-content-center py-2"
+              onClick={() =>
+                (window.location.href =
+                  'http://localhost:3001/oauth2/authorization/google')
+              }
+            >
               <span className="google-icon d-flex align-items-center">
                 {/* Google SVG Icon */}
                 <svg width="18" height="18" viewBox="0 0 48 48">

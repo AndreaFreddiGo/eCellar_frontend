@@ -7,13 +7,14 @@ import { useState, useEffect } from 'react'
 import EcellaNavbar from './components/EcellarNavbar'
 import LoginModal from './components/LoginModal'
 
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import UserProfile from './pages/UserProfile'
 import WinesSearchPage from './pages/WinesSearchPage'
 import EcellarFooter from './components/EcellarFooter'
 import { AuthUser } from './types/AuthUser'
 import UserCellars from './pages/UserCellars'
+import OAuthRedirect from './pages/OAuthRedirect'
 
 function App() {
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -36,9 +37,12 @@ function App() {
     setIsUserLoaded(true)
   }, [])
 
+  const navigate = useNavigate()
+
   const handleLogout = () => {
     localStorage.clear()
     setUser(null)
+    navigate('/')
   }
 
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light')
@@ -48,7 +52,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       <div className="app-layout">
         <EcellaNavbar
           user={user}
@@ -89,7 +93,11 @@ function App() {
               }
             />
             <Route path="/wines" element={<WinesSearchPage />} />
-            <Route path="/cellars" element={<UserCellars wines={[]} />} />
+            <Route path="/cellars" element={<UserCellars />} />
+            <Route
+              path="/oauth2/redirect"
+              element={<OAuthRedirect setUser={setUser} />}
+            />
           </Routes>
         </main>
         <LoginModal
@@ -100,7 +108,7 @@ function App() {
         />
         <EcellarFooter />
       </div>
-    </BrowserRouter>
+    </>
   )
 }
 

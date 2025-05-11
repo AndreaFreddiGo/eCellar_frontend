@@ -1,5 +1,13 @@
 import { useEffect, useState, FormEvent } from 'react'
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
+import {
+  Modal,
+  Button,
+  Form,
+  Row,
+  Col,
+  Dropdown,
+  NavDropdown,
+} from 'react-bootstrap'
 import { UserInfo } from '../types/UserInfo'
 import { updateUserInfo } from '../services/userService'
 import ErrorAlert from './ErrorAlert'
@@ -75,17 +83,23 @@ const UpdateProfileModal = ({
   }
 
   // Update local state on input change
+  type CustomChangeEvent = {
+    target: {
+      name: string
+      value: string
+    }
+  }
+
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      | CustomChangeEvent
   ) => {
-    const { name, value, type } = e.target
-    const isCheckbox = type === 'checkbox'
-    setFormData({
-      ...formData,
-      [name]: isCheckbox ? (e.target as HTMLInputElement).checked : value,
-    })
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
 
   // Submit updated form to backend after validation and cleanup
@@ -219,16 +233,35 @@ const UpdateProfileModal = ({
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Preferred Language</Form.Label>
-                <Form.Select
-                  name="preferredLanguage"
-                  value={formData.preferredLanguage || 'ENG'}
-                  onChange={handleChange}
+                <Form.Label className="mb-3">Preferred Language</Form.Label>
+                <NavDropdown
+                  title={formData.preferredLanguage || 'Language'}
+                  onSelect={(eventKey) => {
+                    if (!eventKey) return
+                    handleChange({
+                      target: {
+                        name: 'preferredLanguage',
+                        value: eventKey,
+                      },
+                    })
+                  }}
+                  className=" border rounded px-3 py-2 bg-white border-secondary border-opacity-50"
                 >
-                  <option value="ENG">English</option>
-                  <option value="ITA">Italian</option>
-                </Form.Select>
+                  <NavDropdown.Item
+                    eventKey="ENG"
+                    active={formData.preferredLanguage === 'ENG'}
+                  >
+                    English
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    eventKey="ITA"
+                    active={formData.preferredLanguage === 'ITA'}
+                  >
+                    Italian
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Form.Group>
+
               <Form.Check
                 type="checkbox"
                 label="Public Profile"
