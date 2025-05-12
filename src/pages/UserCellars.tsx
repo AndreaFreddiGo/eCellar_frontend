@@ -1,27 +1,34 @@
 import { useState, useEffect } from 'react'
 import wine_cellar_barrels from '../assets/wine_cellar_barrels.png'
-import { NavDropdown } from 'react-bootstrap'
+import { Button, NavDropdown } from 'react-bootstrap'
 import { CellarDTO } from '../types/CellarDTO'
 import { getMyCellars } from '../services/cellarService'
+import CreateCellarModal from '../components/CreateCellarModal'
 
 const UserCellars = () => {
   const [cellars, setCellars] = useState<CellarDTO[]>([])
   const [selectedCellar, setSelectedCellar] = useState<CellarDTO | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showCreateModal, setShowCreateModal] = useState(false)
+
+  const fetchCellars = async () => {
+    try {
+      const data = await getMyCellars()
+      setCellars(data)
+      if (
+        !selectedCellar ||
+        !data.find((c) => c.cellarId === selectedCellar.cellarId)
+      ) {
+        setSelectedCellar(data[0] || null)
+      }
+    } catch (err) {
+      console.error('Error fetching user cellars:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchCellars = async () => {
-      try {
-        const data = await getMyCellars()
-        setCellars(data)
-        setSelectedCellar(data[0] || null)
-      } catch (err) {
-        console.error('Error fetching user cellars:', err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchCellars()
   }, [])
 
@@ -48,14 +55,8 @@ const UserCellars = () => {
       )
     }
 
-    // Always show the cellar layout (even if no bottles)
-    if (!selectedCellar || selectedCellar.cellarWines.length === 0) {
-      return (
-        <div className="wine-cellar-container mt-5">
-          {/* Empty shelves */}
-          <div className="wine-cellar-shelf">{/* No bottles */}</div>
-        </div>
-      )
+    if (!selectedCellar) {
+      return <div className="wine-cellar-container mt-5" />
     }
 
     const shelfGroups = []
@@ -65,17 +66,21 @@ const UserCellars = () => {
 
     return (
       <div className="wine-cellar-container mt-5">
-        {shelfGroups.map((bottles, shelfIndex) => (
-          <div key={`shelf-${shelfIndex}`} className="wine-cellar-shelf">
-            {renderBottlesOnShelf(
-              bottles.map((bw) => ({
-                id: bw.cellarWineId,
-                name: bw.personalNotes || `Wine ID: ${bw.wineId}`,
-              })),
-              shelfIndex * 14
-            )}
-          </div>
-        ))}
+        {shelfGroups.length > 0 ? (
+          shelfGroups.map((bottles, shelfIndex) => (
+            <div key={`shelf-${shelfIndex}`} className="wine-cellar-shelf">
+              {renderBottlesOnShelf(
+                bottles.map((bw) => ({
+                  id: bw.cellarWineId,
+                  name: bw.personalNotes || `Wine ID: ${bw.wineId}`,
+                })),
+                shelfIndex * 14
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="wine-cellar-shelf">{/* Empty shelf */}</div>
+        )}
       </div>
     )
   }
@@ -91,11 +96,6 @@ const UserCellars = () => {
               selectedCellar?.name ||
               (cellars.length === 0 ? 'No cellars' : 'Select a cellar')
             }
-            onSelect={(eventKey) =>
-              setSelectedCellar(
-                cellars.find((c) => c.cellarId === eventKey) || null
-              )
-            }
             className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 me-2"
             id="cellar-dropdown"
           >
@@ -103,8 +103,8 @@ const UserCellars = () => {
               cellars.map((cellar) => (
                 <NavDropdown.Item
                   key={cellar.cellarId}
-                  eventKey={cellar.cellarId}
                   active={selectedCellar?.cellarId === cellar.cellarId}
+                  onClick={() => setSelectedCellar(cellar)}
                 >
                   {cellar.name}
                 </NavDropdown.Item>
@@ -113,28 +113,49 @@ const UserCellars = () => {
               <NavDropdown.Item disabled>No cellars</NavDropdown.Item>
             )}
           </NavDropdown>
-          <a
-            href="#"
-            className="text-decoration-underline small fs-6"
-            style={{ color: 'darkred', cursor: 'pointer' }}
+
+          <Button
+            variant="link"
+            className="p-0 m-0 text-decoration-underline small fs-6"
+            style={{ color: 'darkred' }}
+            onClick={() => setShowCreateModal(true)}
           >
             create new cellar
-          </a>
+          </Button>
         </div>
 
         {/* INFO BOX */}
-        {selectedCellar ? (
-          selectedCellar.cellarWines.length > 0 ? (
-            <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm">
-              <h5 className="mb-1">{selectedCellar.name}</h5>
-              <p className="text-muted">{selectedCellar.description}</p>
-              <hr className="my-2" />
+        {selectedCellar && (
+          <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm">
+            <p className="mb-1 text-darkred fw-semibold fs-6">Name:</p>
+            <p className="mb-2 text-black fs-6">{selectedCellar.name}</p>
+
+            {selectedCellar.description && (
+              <>
+                <p className="mb-1 text-darkred fw-semibold fs-6">
+                  Description:
+                </p>
+                <p className="mb-2 text-black fs-6">
+                  {selectedCellar.description}
+                </p>
+              </>
+            )}
+
+            <p className="mb-1 text-darkred fw-semibold fs-6">
+              Number of wines:
+            </p>
+            <p className="mb-2 text-black fs-6">
+              {selectedCellar.cellarWines.length}
+            </p>
+
+            <p className="mb-1 text-darkred fw-semibold fs-6">Wine list:</p>
+            {selectedCellar.cellarWines.length > 0 ? (
               <ul className="list-unstyled mb-0">
                 {selectedCellar.cellarWines.map((w) => (
                   <li key={w.cellarWineId}>
                     <a
                       href="#"
-                      className="text-decoration-none"
+                      className="text-decoration-none fs-6"
                       style={{ color: 'darkred', cursor: 'pointer' }}
                     >
                       {w.personalNotes || `Wine ID: ${w.wineId}`}
@@ -142,21 +163,28 @@ const UserCellars = () => {
                   </li>
                 ))}
               </ul>
-            </div>
-          ) : (
-            <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm">
-              <p className="text-muted">
-                Your wine cellar is empty. Add some bottles!
-              </p>
-            </div>
-          )
-        ) : cellars.length === 0 ? (
-          <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm">
-            <p className="text-muted">
-              You don't have any cellar. Create a new one!
-            </p>
+            ) : (
+              <>
+                <p className="text-black fs-6 mb-1">
+                  Your wine cellar is empty
+                </p>
+                <p className="mb-0">
+                  <a
+                    href="#"
+                    className="text-decoration-none fs-6"
+                    style={{ color: 'darkred', cursor: 'pointer' }}
+                    onClick={() => {
+                      // inserisci qui il comportamento per l'aggiunta vini (es. apri modale)
+                      console.log('Add wine clicked')
+                    }}
+                  >
+                    Add some bottles
+                  </a>
+                </p>
+              </>
+            )}
           </div>
-        ) : null}
+        )}
       </div>
 
       {/* LAYOUT CENTRALE */}
@@ -172,6 +200,17 @@ const UserCellars = () => {
           />
         </div>
       </div>
+
+      <CreateCellarModal
+        show={showCreateModal}
+        handleClose={() => setShowCreateModal(false)}
+        onCreated={async (newCellar) => {
+          await fetchCellars()
+          const updated = await getMyCellars()
+          const created = updated.find((c) => c.cellarId === newCellar.cellarId)
+          if (created) setSelectedCellar(created)
+        }}
+      />
     </>
   )
 }

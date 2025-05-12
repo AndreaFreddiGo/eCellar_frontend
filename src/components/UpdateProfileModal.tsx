@@ -1,13 +1,5 @@
 import { useEffect, useState, FormEvent } from 'react'
-import {
-  Modal,
-  Button,
-  Form,
-  Row,
-  Col,
-  Dropdown,
-  NavDropdown,
-} from 'react-bootstrap'
+import { Modal, Button, Form, Row, Col, NavDropdown } from 'react-bootstrap'
 import { UserInfo } from '../types/UserInfo'
 import { updateUserInfo } from '../services/userService'
 import ErrorAlert from './ErrorAlert'
