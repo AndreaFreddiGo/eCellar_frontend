@@ -220,7 +220,7 @@ h1 {
 /* Container della bottiglia */
 .wine-bottle-container {
   position: absolute;
-  top: 40%;
+  top: 60%;
   left: 10px;
   transform: translateY(-50%);
   z-index: 1;
@@ -229,7 +229,7 @@ h1 {
 
 /* Immagine della bottiglia */
 .wine-bottle-img {
-  width: 50px;
+  width: 55px;
   height: auto;
   transition: transform 0.3s ease;
 }

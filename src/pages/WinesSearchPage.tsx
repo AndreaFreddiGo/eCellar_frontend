@@ -63,7 +63,7 @@ const WinesSearchPage = () => {
       {!loading && results.length > 0 && (
         <Row className="mt-4">
           {results.map((wine) => (
-            <Col key={wine.wineId} md={4} className="mb-4">
+            <Col key={wine.id} md={4} className="mb-4">
               <WineCard wine={wine} />
             </Col>
           ))}

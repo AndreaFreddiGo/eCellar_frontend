@@ -32,7 +32,7 @@ const CreateCellarModal = ({
   useEffect(() => {
     if (cellarToEdit) {
       setFormData({
-        cellarId: cellarToEdit.cellarId,
+        cellarId: cellarToEdit.id,
         name: cellarToEdit.name,
         description: cellarToEdit.description,
       })

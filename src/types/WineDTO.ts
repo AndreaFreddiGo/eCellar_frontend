@@ -1,6 +1,6 @@
 // This file defines the WineDTO interface, which represents the structure of wine data in the application
 export interface WineDTO {
-  wineId: string
+  id: string
   name: string
   producer: string
   vintage: number

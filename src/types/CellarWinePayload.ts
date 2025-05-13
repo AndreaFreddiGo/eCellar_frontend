@@ -1,10 +1,8 @@
 import { BottleSize } from './BottleSize'
 
-export interface CellarWineDTO {
-  id: string // UUID della cellarWine
+export interface CellarWinePayload {
   wineId: string
   cellarId: string
-  userId: string
   quantity: number
   size: BottleSize
   isPublic: boolean

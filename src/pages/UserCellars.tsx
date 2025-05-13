@@ -5,6 +5,7 @@ import { CellarDTO } from '../types/CellarDTO'
 import { getMyCellars, deleteCellar } from '../services/cellarService'
 import CreateCellarModal from '../components/CreateCellarModal'
 import UpdateCellarModal from '../components/UpdateCellarModal'
+import WinesSearchModal from '../components/WinesSearchModal'
 
 const UserCellars = () => {
   const [cellars, setCellars] = useState<CellarDTO[]>([])
@@ -12,14 +13,21 @@ const UserCellars = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
+  const [showWineSearchModal, setShowWineSearchModal] = useState(false)
 
   const fetchCellars = async () => {
     try {
       const data = await getMyCellars()
       setCellars(data)
-      if (!selectedCellar || !data.some((c) => c.id === selectedCellar.id)) {
-        setSelectedCellar(data[0] || null)
-      }
+
+      setSelectedCellar((prev) => {
+        if (prev) {
+          const match = data.find((c) => c.id === prev.id)
+          return match || data[0] || null
+        } else {
+          return data[0] || null
+        }
+      })
     } catch (err) {
       console.error('Error fetching user cellars:', err)
     } finally {
@@ -30,6 +38,12 @@ const UserCellars = () => {
   useEffect(() => {
     fetchCellars()
   }, [])
+
+  useEffect(() => {
+    if (!selectedCellar && cellars.length > 0) {
+      setSelectedCellar(cellars[0])
+    }
+  }, [cellars])
 
   const handleDelete = async () => {
     if (!selectedCellar?.id) {
@@ -92,7 +106,7 @@ const UserCellars = () => {
             <div key={`shelf-${shelfIndex}`} className="wine-cellar-shelf">
               {renderBottlesOnShelf(
                 bottles.map((bw) => ({
-                  id: bw.cellarWineId,
+                  id: bw.id,
                   name: bw.personalNotes || `Wine ID: ${bw.wineId}`,
                 })),
                 shelfIndex * 14
@@ -170,39 +184,27 @@ const UserCellars = () => {
             </p>
 
             <p className="mb-1 text-darkred fw-semibold fs-6">Wine list:</p>
-            {selectedCellar.cellarWines.length > 0 ? (
-              <ul className="list-unstyled mb-0">
-                {selectedCellar.cellarWines.map((w) => (
-                  <li key={w.cellarWineId}>
-                    <a
-                      href="#"
-                      className="text-decoration-none fs-6"
-                      style={{ color: 'darkred', cursor: 'pointer' }}
-                    >
-                      {w.personalNotes || `Wine ID: ${w.wineId}`}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <>
-                <p className="text-black fs-6 mb-1">
-                  Your wine cellar is empty
-                </p>
-                <p className="mb-0">
-                  <a
-                    href="#"
-                    className="text-decoration-none fs-6"
-                    style={{ color: 'darkred', cursor: 'pointer' }}
-                    onClick={() => {
-                      console.log('Add wine clicked')
-                    }}
-                  >
-                    Add some bottles
-                  </a>
-                </p>
-              </>
-            )}
+            <ul className="list-unstyled mb-0">
+              {selectedCellar.cellarWines.map((w) => (
+                <li key={w.id}>
+                  <span className="fs-6" style={{ color: 'darkred' }}>
+                    {w.wineName} – {w.producer} ({w.vintage}) x{w.quantity}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-2 mb-0">
+              <a
+                href="#"
+                className="text-decoration-none fs-6"
+                style={{ color: 'darkred', cursor: 'pointer' }}
+                onClick={() => setShowWineSearchModal(true)}
+              >
+                <span style={{ color: 'black', fontSize: '1.2rem' }}>➕</span>
+                Add more bottles
+              </a>
+            </p>
 
             <hr />
             <div className="d-flex justify-content-between mt-2">
@@ -271,8 +273,15 @@ const UserCellars = () => {
           }}
         />
       )}
+      {selectedCellar && (
+        <WinesSearchModal
+          show={showWineSearchModal}
+          onHide={() => setShowWineSearchModal(false)}
+          cellarId={selectedCellar.id}
+          onBottleAdded={fetchCellars}
+        />
+      )}
     </>
   )
 }
-
 export default UserCellars
