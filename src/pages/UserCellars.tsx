@@ -2,23 +2,22 @@ import { useState, useEffect } from 'react'
 import wine_cellar_barrels from '../assets/wine_cellar_barrels.png'
 import { Button, NavDropdown } from 'react-bootstrap'
 import { CellarDTO } from '../types/CellarDTO'
-import { getMyCellars } from '../services/cellarService'
+import { getMyCellars, deleteCellar } from '../services/cellarService'
 import CreateCellarModal from '../components/CreateCellarModal'
+import UpdateCellarModal from '../components/UpdateCellarModal'
 
 const UserCellars = () => {
   const [cellars, setCellars] = useState<CellarDTO[]>([])
   const [selectedCellar, setSelectedCellar] = useState<CellarDTO | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showUpdateModal, setShowUpdateModal] = useState(false)
 
   const fetchCellars = async () => {
     try {
       const data = await getMyCellars()
       setCellars(data)
-      if (
-        !selectedCellar ||
-        !data.find((c) => c.cellarId === selectedCellar.cellarId)
-      ) {
+      if (!selectedCellar || !data.some((c) => c.id === selectedCellar.id)) {
         setSelectedCellar(data[0] || null)
       }
     } catch (err) {
@@ -31,6 +30,28 @@ const UserCellars = () => {
   useEffect(() => {
     fetchCellars()
   }, [])
+
+  const handleDelete = async () => {
+    if (!selectedCellar?.id) {
+      alert('Please select a cellar before deleting.')
+      return
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete cellar "${selectedCellar.name}"?`
+    )
+    if (!confirmed) return
+
+    try {
+      await deleteCellar(selectedCellar.id)
+      const updatedCellars = await getMyCellars()
+      setCellars(updatedCellars)
+      setSelectedCellar(updatedCellars[0] || null)
+    } catch (error) {
+      console.error('Failed to delete cellar:', error)
+      alert('An error occurred while deleting the cellar.')
+    }
+  }
 
   const renderBottlesOnShelf = (
     bottles: { id: string; name: string }[],
@@ -102,8 +123,8 @@ const UserCellars = () => {
             {cellars.length > 0 ? (
               cellars.map((cellar) => (
                 <NavDropdown.Item
-                  key={cellar.cellarId}
-                  active={selectedCellar?.cellarId === cellar.cellarId}
+                  key={cellar.id}
+                  active={selectedCellar?.id === cellar.id}
                   onClick={() => setSelectedCellar(cellar)}
                 >
                   {cellar.name}
@@ -174,7 +195,6 @@ const UserCellars = () => {
                     className="text-decoration-none fs-6"
                     style={{ color: 'darkred', cursor: 'pointer' }}
                     onClick={() => {
-                      // inserisci qui il comportamento per l'aggiunta vini (es. apri modale)
                       console.log('Add wine clicked')
                     }}
                   >
@@ -183,6 +203,26 @@ const UserCellars = () => {
                 </p>
               </>
             )}
+
+            <hr />
+            <div className="d-flex justify-content-between mt-2">
+              <Button
+                variant="dark"
+                size="sm"
+                disabled={!selectedCellar}
+                onClick={handleDelete}
+              >
+                Delete cellar
+              </Button>
+
+              <Button
+                size="sm"
+                style={{ backgroundColor: 'darkred', border: 'none' }}
+                onClick={() => setShowUpdateModal(true)}
+              >
+                Edit cellar
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -201,16 +241,36 @@ const UserCellars = () => {
         </div>
       </div>
 
+      {/* MODALI */}
       <CreateCellarModal
         show={showCreateModal}
         handleClose={() => setShowCreateModal(false)}
         onCreated={async (newCellar) => {
           await fetchCellars()
           const updated = await getMyCellars()
-          const created = updated.find((c) => c.cellarId === newCellar.cellarId)
+          const created = updated.find((c) => c.id === newCellar.id)
           if (created) setSelectedCellar(created)
         }}
       />
+
+      {selectedCellar && (
+        <UpdateCellarModal
+          show={showUpdateModal}
+          handleClose={() => setShowUpdateModal(false)}
+          initialData={{
+            cellarId: selectedCellar.id,
+            name: selectedCellar.name,
+            description: selectedCellar.description,
+          }}
+          onUpdated={async (updatedCellar) => {
+            await fetchCellars()
+            const freshList = await getMyCellars()
+            const refreshed = freshList.find((c) => c.id === updatedCellar.id)
+            if (refreshed) setSelectedCellar(refreshed)
+            setShowUpdateModal(false)
+          }}
+        />
+      )}
     </>
   )
 }

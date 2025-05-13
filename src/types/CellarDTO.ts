@@ -1,7 +1,7 @@
 import { CellarWineDTO } from './CellarWineDTO'
 
 export interface CellarDTO {
-  cellarId: string
+  id: string
   name: string
   description: string
   userId: string

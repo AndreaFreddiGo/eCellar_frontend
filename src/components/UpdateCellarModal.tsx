@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react'
 import { Modal, Button, Form, Alert } from 'react-bootstrap'
-import {
-  createCellar,
-  updateCellar,
-  CellarPayload,
-} from '../services/cellarService'
-import { AxiosError } from 'axios'
+import { updateCellar } from '../services/cellarService'
 import { CellarDTO } from '../types/CellarDTO'
+import { AxiosError } from 'axios'
 
 interface Props {
   show: boolean
   handleClose: () => void
-  onCreated: (newCellar: CellarDTO) => void
-  cellarToEdit?: CellarDTO | null
+  initialData: {
+    cellarId: string
+    name: string
+    description?: string
+  }
+  onUpdated: (updatedCellar: CellarDTO) => void
 }
 
-const CreateCellarModal = ({
+const UpdateCellarModal = ({
   show,
   handleClose,
-  onCreated,
-  cellarToEdit,
+  initialData,
+  onUpdated,
 }: Props) => {
-  const [formData, setFormData] = useState<CellarPayload>({
+  const [formData, setFormData] = useState({
+    cellarId: '',
     name: '',
     description: '',
   })
@@ -30,22 +31,14 @@ const CreateCellarModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    if (cellarToEdit) {
+    if (show) {
       setFormData({
-        cellarId: cellarToEdit.cellarId,
-        name: cellarToEdit.name,
-        description: cellarToEdit.description,
+        cellarId: initialData.cellarId,
+        name: initialData.name,
+        description: initialData.description || '',
       })
-    } else {
-      setFormData({ name: '', description: '' })
     }
-
-    if (!show) {
-      setErrors({})
-      setGlobalError(null)
-      setIsSubmitting(false)
-    }
-  }, [show, cellarToEdit])
+  }, [show, initialData])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -58,25 +51,18 @@ const CreateCellarModal = ({
     setErrors({})
     setGlobalError(null)
 
-    const newErrors: { [key: string]: string } = {}
-    if (!formData.name.trim()) newErrors.name = 'Name is required.'
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
+    if (!formData.name.trim()) {
+      setErrors({ name: 'Name is required' })
       return
     }
 
-    setIsSubmitting(true)
-
     try {
-      let result: CellarDTO
-      if (formData.cellarId) {
-        result = await updateCellar(formData.cellarId, formData)
-      } else {
-        result = await createCellar(formData)
-      }
-      onCreated(result)
-      handleClose()
+      setIsSubmitting(true)
+      const updated = await updateCellar(formData.cellarId, {
+        name: formData.name,
+        description: formData.description,
+      })
+      onUpdated(updated)
     } catch (err) {
       const axiosError = err as AxiosError<{ message: string }>
       setGlobalError(
@@ -91,8 +77,7 @@ const CreateCellarModal = ({
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <h4 className="mb-0 ms-2">
-          {formData.cellarId ? 'Edit' : 'Create'}{' '}
-          <span style={{ color: 'darkred' }}>cellar</span>
+          Edit <span style={{ color: 'darkred' }}>cellar</span>
         </h4>
       </Modal.Header>
       <Modal.Body>
@@ -140,13 +125,7 @@ const CreateCellarModal = ({
               }}
               disabled={isSubmitting}
             >
-              {isSubmitting
-                ? formData.cellarId
-                  ? 'Updating...'
-                  : 'Creating...'
-                : formData.cellarId
-                ? 'Update Cellar'
-                : 'Create Cellar'}
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </Form>
@@ -155,4 +134,4 @@ const CreateCellarModal = ({
   )
 }
 
-export default CreateCellarModal
+export default UpdateCellarModal
