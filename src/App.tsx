@@ -14,7 +14,7 @@ import UserProfile from './pages/UserProfile'
 import UserCellars from './pages/UserCellars'
 import WinesSearchPage from './pages/WinesSearchPage'
 import OAuthRedirect from './pages/OAuthRedirect'
-
+import { useLocation } from 'react-router-dom'
 import { AuthUser } from './types/AuthUser'
 import SignUpModal from './components/SignUpModal'
 import axios from 'axios'
@@ -44,7 +44,8 @@ function App() {
     }
   }, [currentTheme])
 
-  // Recupera utente da localStorage
+  const location = useLocation()
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     const userId = localStorage.getItem('userId')
@@ -63,9 +64,8 @@ function App() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
 
-    // ✅ aggiungi SEMPRE questo, anche se l'if fallisce
     setIsUserLoaded(true)
-  }, [])
+  }, [location.pathname]) // 🔁 Trigger ogni volta che cambia path
 
   const handleLogin = () => {
     setShowLoginModal(true)

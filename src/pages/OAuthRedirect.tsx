@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser } from '../services/userService'
 import { AuthUser } from '../types/AuthUser'
+import axios from 'axios'
 
 interface OAuthRedirectProps {
   setUser: (user: AuthUser) => void
@@ -16,6 +17,8 @@ const OAuthRedirect = ({ setUser }: OAuthRedirectProps) => {
 
     if (token) {
       localStorage.setItem('token', token)
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
       getCurrentUser()
         .then((userData) => {
@@ -36,7 +39,7 @@ const OAuthRedirect = ({ setUser }: OAuthRedirectProps) => {
           console.error('Error fetching user profile:', err)
         })
         .finally(() => {
-          navigate('/')
+          setTimeout(() => navigate('/'), 50)
         })
     } else {
       console.warn('No token found in OAuth redirect')

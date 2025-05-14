@@ -1,18 +1,27 @@
-// SearchWinesPage.tsx
-import { useEffect, useState } from 'react'
-import { Container, Form, Row, Col } from 'react-bootstrap'
+// src/components/WinesSearchModal.tsx
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
 import { searchWines } from '../services/wineService'
 import { getCellarWinesByWineIds } from '../services/cellarWineService'
 import { CellarWineDTO } from '../types/CellarWineDTO'
-import CellarWineCard from '../components/CellarWineCard'
+import CellarWineCard from './CellarWineCard'
 import logo_eCellar from '../assets/logo_eCellar.png'
 
-const WinesSearchPage = () => {
+interface Props {
+  show: boolean
+  onHide: () => void
+  cellarId: string
+  onBottleAdded: () => void
+}
+
+const WinesSearchModal = ({ show, onHide, cellarId, onBottleAdded }: Props) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<CellarWineDTO[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    if (!show) return
+
     const fetchResults = async () => {
       if (!query.trim()) {
         setResults([])
@@ -37,52 +46,57 @@ const WinesSearchPage = () => {
       }
     }
 
-    const timeout = setTimeout(() => {
-      fetchResults()
-    }, 300) // debounce time
-
+    const timeout = setTimeout(fetchResults, 300)
     return () => clearTimeout(timeout)
-  }, [query])
+  }, [query, show])
 
   return (
-    <Container className="pt-5 mt-5">
-      <h2 className="mb-3" style={{ color: 'darkred' }}>
-        Search Wines
-      </h2>
-      <Form onSubmit={(e) => e.preventDefault()}>
-        <Form.Control
-          type="text"
-          placeholder="Search by name, producer, grape..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </Form>
-      {loading && (
-        <div className="text-center mt-4">
-          <img
-            src={logo_eCellar}
-            alt="logo_eCellar"
-            className="spinner spinner-border border-0"
-          />{' '}
-          <span>Loading...</span>
-        </div>
-      )}
+    <Modal show={show} onHide={onHide} size="xl" centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Search and Add Bottles</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={(e) => e.preventDefault()}>
+          <Form.Control
+            type="text"
+            placeholder="Search by name, producer, grape..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </Form>
 
-      {!loading && results.length > 0 && (
-        <Row className="mt-4">
-          {results.map((bottle) => (
-            <Col key={bottle.id} md={4} className="mb-4">
-              <CellarWineCard bottle={bottle} />
-            </Col>
-          ))}
-        </Row>
-      )}
+        {loading && (
+          <div className="text-center mt-4">
+            <img
+              src={logo_eCellar}
+              alt="Loading"
+              className="spinner spinner-border border-0"
+            />{' '}
+            <span>Loading...</span>
+          </div>
+        )}
 
-      {!loading && query && results.length === 0 && (
-        <p className="mt-4 text-muted">No bottles found.</p>
-      )}
-    </Container>
+        {!loading && results.length > 0 && (
+          <Row className="mt-4">
+            {results.map((bottle) => (
+              <Col key={bottle.id} md={4} className="mb-4">
+                <CellarWineCard bottle={bottle} />
+              </Col>
+            ))}
+          </Row>
+        )}
+
+        {!loading && query && results.length === 0 && (
+          <p className="mt-4 text-muted">No bottles found.</p>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onHide}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   )
 }
 
-export default WinesSearchPage
+export default WinesSearchModal
