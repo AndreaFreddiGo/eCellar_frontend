@@ -171,7 +171,7 @@ const UserCellars = () => {
 
         {/* INFO BOX */}
         {selectedCellar && (
-          <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm">
+          <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm info-box">
             <p className="mb-1 text-darkred fw-semibold fs-6">Name:</p>
             <p className="mb-2 text-black fs-6">{selectedCellar.name}</p>
 
@@ -290,7 +290,12 @@ const UserCellars = () => {
           show={showWineSearchModal}
           onHide={() => setShowWineSearchModal(false)}
           cellarId={selectedCellar.id}
-          onBottleAdded={fetchCellars}
+          onBottleAdded={async () => {
+            const updatedWines = await getCellarWinesByCellarId(
+              selectedCellar.id
+            )
+            setCellarWines(updatedWines)
+          }}
         />
       )}
     </>

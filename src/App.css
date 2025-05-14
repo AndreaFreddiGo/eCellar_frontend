@@ -628,10 +628,6 @@ h1 {
   margin-top: 8rem;
 }
 
-.user-cellars-left {
-  flex: 1;
-}
-
 .cellar-barrels-img {
   max-height: 1000px;
   width: 350px;
@@ -646,13 +642,8 @@ h1 {
   z-index: 2;
 }
 
-.cellar-details-box {
-  max-width: 350px;
-  overflow: hidden;
-}
-
-.cellar-details-box ul li a:hover {
-  color: darkred;
+.info-box {
+  margin-bottom: 100px;
 }
 
 /* ======================
