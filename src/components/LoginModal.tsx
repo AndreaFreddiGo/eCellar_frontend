@@ -11,8 +11,8 @@ import axios from 'axios'
 interface LoginModalProps {
   showLoginModal: boolean
   handleClose: () => void
-  onSignUpClick: () => void
   setUser: (user: AuthUser) => void
+  onSignUpClick: () => void
 }
 
 const LoginModal = (props: LoginModalProps) => {

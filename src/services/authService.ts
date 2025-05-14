@@ -23,3 +23,24 @@ export const login = async (
     throw new Error('Network or unknown error')
   }
 }
+
+// This function handles the user registration process
+// It takes the registration data and returns a promise (void or success message if needed)
+export interface RegisterPayload {
+  name: string
+  surname: string
+  email: string
+  username: string
+  password: string
+}
+
+export const registerUser = async (payload: RegisterPayload): Promise<void> => {
+  try {
+    await axios.post(BASE_URL + '/register', payload)
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      throw error.response.data as ErrorResponse
+    }
+    throw new Error('Network or unknown error')
+  }
+}

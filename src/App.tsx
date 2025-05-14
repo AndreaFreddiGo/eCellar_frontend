@@ -16,12 +16,15 @@ import WinesSearchPage from './pages/WinesSearchPage'
 import OAuthRedirect from './pages/OAuthRedirect'
 
 import { AuthUser } from './types/AuthUser'
+import SignUpModal from './components/SignUpModal'
+import axios from 'axios'
 
 function App() {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [isUserLoaded, setIsUserLoaded] = useState(false)
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light')
+  const [showSignUpModal, setShowSignUpModal] = useState(false)
 
   const navigate = useNavigate()
 
@@ -43,13 +46,24 @@ function App() {
 
   // Recupera utente da localStorage
   useEffect(() => {
-    const name = localStorage.getItem('name')
-    const username = localStorage.getItem('username')
+    const token = localStorage.getItem('token')
     const userId = localStorage.getItem('userId')
-    const profilePicture = localStorage.getItem('profilePicture') || ''
-    if (name && username && userId) {
-      setUser({ name, username, userId, profilePicture })
+    const username = localStorage.getItem('username')
+    const name = localStorage.getItem('name')
+    const profilePicture = localStorage.getItem('profilePicture')
+
+    if (token && userId && username) {
+      setUser({
+        userId,
+        username,
+        name: name || '',
+        profilePicture: profilePicture || '',
+      })
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
+
+    // ✅ aggiungi SEMPRE questo, anche se l'if fallisce
     setIsUserLoaded(true)
   }, [])
 
@@ -88,20 +102,19 @@ function App() {
           <Route
             path="/me"
             element={
-              isUserLoaded ? (
-                user ? (
-                  <UserProfile />
-                ) : (
-                  <Navigate to="/" replace />
-                )
-              ) : (
+              !isUserLoaded ? (
                 <div className="text-center pt-5 mt-5">
                   <div className="spinner-border text-primary" role="status" />
                   <div className="mt-3">Loading...</div>
                 </div>
+              ) : !user ? (
+                <Navigate to="/" replace />
+              ) : (
+                <UserProfile />
               )
             }
           />
+
           <Route path="/wines" element={<WinesSearchPage />} />
           <Route path="/cellars" element={<UserCellars />} />
           <Route
@@ -115,8 +128,38 @@ function App() {
         showLoginModal={showLoginModal}
         handleClose={() => setShowLoginModal(false)}
         setUser={setUser}
-        onSignUpClick={() => console.log('Redirect to sign up')}
+        onSignUpClick={() => {
+          setShowLoginModal(false)
+          setShowSignUpModal(true)
+        }}
       />
+
+      <SignUpModal
+        show={showSignUpModal}
+        handleClose={() => setShowSignUpModal(false)}
+        onRegistered={() => setShowSignUpModal(false)}
+        onLoginSuccess={(data) => {
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('userId', data.userId)
+          localStorage.setItem('username', data.username)
+          localStorage.setItem('name', data.name)
+          localStorage.setItem('profilePicture', data.profilePicture || '')
+
+          axios.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${data.token}`
+
+          setUser({
+            userId: data.userId,
+            username: data.username,
+            name: data.name,
+            profilePicture: data.profilePicture,
+          })
+
+          navigate('/me')
+        }}
+      />
+
       <EcellarFooter />
     </div>
   )
