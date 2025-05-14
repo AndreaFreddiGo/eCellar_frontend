@@ -13,4 +13,8 @@ export interface CellarWineDTO {
   purchasePrice?: number
   askingPrice?: number
   myScore?: number
+
+  wineName: string
+  wineProducer: string
+  wineVintage: number
 }

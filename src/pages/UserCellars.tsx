@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import wine_cellar_barrels from '../assets/wine_cellar_barrels.png'
 import { Button, NavDropdown } from 'react-bootstrap'
 import { CellarDTO } from '../types/CellarDTO'
+import { CellarWineDTO } from '../types/CellarWineDTO'
 import { getMyCellars, deleteCellar } from '../services/cellarService'
+import { getCellarWinesByCellarId } from '../services/cellarWineService'
 import CreateCellarModal from '../components/CreateCellarModal'
 import UpdateCellarModal from '../components/UpdateCellarModal'
 import WinesSearchModal from '../components/WinesSearchModal'
@@ -14,12 +16,12 @@ const UserCellars = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
   const [showWineSearchModal, setShowWineSearchModal] = useState(false)
+  const [cellarWines, setCellarWines] = useState<CellarWineDTO[]>([])
 
   const fetchCellars = async () => {
     try {
       const data = await getMyCellars()
       setCellars(data)
-
       setSelectedCellar((prev) => {
         if (prev) {
           const match = data.find((c) => c.id === prev.id)
@@ -40,10 +42,18 @@ const UserCellars = () => {
   }, [])
 
   useEffect(() => {
-    if (!selectedCellar && cellars.length > 0) {
-      setSelectedCellar(cellars[0])
+    const fetchWines = async () => {
+      if (!selectedCellar?.id) return
+      try {
+        const wines = await getCellarWinesByCellarId(selectedCellar.id)
+        setCellarWines(wines)
+      } catch (err) {
+        console.error('Error fetching cellar wines:', err)
+      }
     }
-  }, [cellars])
+
+    fetchWines()
+  }, [selectedCellar?.id])
 
   const handleDelete = async () => {
     if (!selectedCellar?.id) {
@@ -68,7 +78,7 @@ const UserCellars = () => {
   }
 
   const renderBottlesOnShelf = (
-    bottles: { id: string; name: string }[],
+    bottles: { id: string; title: string }[],
     startIndex: number
   ) => {
     return bottles.map((bottle, index) => {
@@ -77,7 +87,7 @@ const UserCellars = () => {
         <div
           key={bottle.id}
           className={`bottle bottle-pos-${positionIndex + 1}`}
-          title={bottle.name}
+          title={bottle.title}
         />
       )
     })
@@ -95,8 +105,8 @@ const UserCellars = () => {
     }
 
     const shelfGroups = []
-    for (let i = 0; i < selectedCellar.cellarWines.length; i += 14) {
-      shelfGroups.push(selectedCellar.cellarWines.slice(i, i + 14))
+    for (let i = 0; i < cellarWines.length; i += 14) {
+      shelfGroups.push(cellarWines.slice(i, i + 14))
     }
 
     return (
@@ -107,7 +117,7 @@ const UserCellars = () => {
               {renderBottlesOnShelf(
                 bottles.map((bw) => ({
                   id: bw.id,
-                  name: bw.personalNotes || `Wine ID: ${bw.wineId}`,
+                  title: `${bw.wineName} – ${bw.wineProducer} (${bw.wineVintage}) x${bw.quantity}`,
                 })),
                 shelfIndex * 14
               )}
@@ -179,16 +189,18 @@ const UserCellars = () => {
             <p className="mb-1 text-darkred fw-semibold fs-6">
               Number of wines:
             </p>
-            <p className="mb-2 text-black fs-6">
-              {selectedCellar.cellarWines.length}
-            </p>
+            <p className="mb-2 text-black fs-6">{cellarWines.length}</p>
 
             <p className="mb-1 text-darkred fw-semibold fs-6">Wine list:</p>
             <ul className="list-unstyled mb-0">
-              {selectedCellar.cellarWines.map((w) => (
-                <li key={w.id}>
-                  <span className="fs-6" style={{ color: 'darkred' }}>
-                    {w.wineName} – {w.producer} ({w.vintage}) x{w.quantity}
+              {cellarWines.map((w) => (
+                <li key={w.id} className="mb-1">
+                  <span
+                    className="text-dark"
+                    style={{ fontSize: '0.8rem', lineHeight: '1.1' }}
+                  >
+                    {w.wineName} – {w.wineProducer} ({w.wineVintage}) ×
+                    {w.quantity}
                   </span>
                 </li>
               ))}
@@ -201,7 +213,7 @@ const UserCellars = () => {
                 style={{ color: 'darkred', cursor: 'pointer' }}
                 onClick={() => setShowWineSearchModal(true)}
               >
-                <span style={{ color: 'black', fontSize: '1.2rem' }}>➕</span>
+                <span style={{ color: 'black', fontSize: '1.2rem' }}>➕</span>{' '}
                 Add more bottles
               </a>
             </p>
@@ -216,7 +228,6 @@ const UserCellars = () => {
               >
                 Delete cellar
               </Button>
-
               <Button
                 size="sm"
                 style={{ backgroundColor: 'darkred', border: 'none' }}
@@ -273,6 +284,7 @@ const UserCellars = () => {
           }}
         />
       )}
+
       {selectedCellar && (
         <WinesSearchModal
           show={showWineSearchModal}
@@ -284,4 +296,5 @@ const UserCellars = () => {
     </>
   )
 }
+
 export default UserCellars

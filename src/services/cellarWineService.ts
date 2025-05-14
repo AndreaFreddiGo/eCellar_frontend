@@ -1,13 +1,27 @@
 // src/services/cellarWinesService.ts
-import axios from 'axios'
-import { CellarWinePayload } from '../types/CellarWinePayload'
-import { CellarWineDTO } from '../types/CellarWineDTO'
 
-// Base API URL for cellar wines
+import axios from 'axios'
+import { CellarWineDTO } from '../types/CellarWineDTO'
+import { CellarWinePayload } from '../types/CellarWinePayload'
+
 const BASE_URL = 'http://localhost:3001/cellarWines'
 
-// This function creates a new cellar wine for the current authenticated user
-// It sends the payload to POST /cellarWines/me and returns the created CellarWineDTO
+// Retrieves all cellar wines for a specific cellar (owned by the authenticated user)
+export const getCellarWinesByCellarId = async (
+  cellarId: string
+): Promise<CellarWineDTO[]> => {
+  const token = localStorage.getItem('token')
+
+  const response = await axios.get(`${BASE_URL}/me/byCellar/${cellarId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  return response.data
+}
+
+// Creates a new cellar wine entry for the authenticated user
 export const createCellarWine = async (
   payload: CellarWinePayload
 ): Promise<CellarWineDTO> => {
