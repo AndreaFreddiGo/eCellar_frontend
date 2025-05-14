@@ -18,4 +18,5 @@ export interface CellarWineDTO {
   wineProducer: string
   wineVintage: number
   username: string
+  hasPendingProposal?: boolean
 }

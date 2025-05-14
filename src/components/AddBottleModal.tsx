@@ -104,13 +104,14 @@ const AddBottleModal = ({
             </Col>
           </Row>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formIsPublic">
             <Form.Check
               type="checkbox"
-              label="Public"
-              name="isPublic"
+              label="Make bottle public"
               checked={formData.isPublic}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, isPublic: e.target.checked })
+              }
             />
           </Form.Group>
 

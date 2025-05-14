@@ -8,6 +8,9 @@ import { getCellarWinesByCellarId } from '../services/cellarWineService'
 import CreateCellarModal from '../components/CreateCellarModal'
 import UpdateCellarModal from '../components/UpdateCellarModal'
 import WinesSearchModal from '../components/WinesSearchModal'
+import ProposalModal from '../components/ProposalModal'
+import { PurchaseProposalDTO } from '../types/purchaseProposalDTO'
+import axios from 'axios'
 
 const UserCellars = () => {
   const [cellars, setCellars] = useState<CellarDTO[]>([])
@@ -17,6 +20,9 @@ const UserCellars = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false)
   const [showWineSearchModal, setShowWineSearchModal] = useState(false)
   const [cellarWines, setCellarWines] = useState<CellarWineDTO[]>([])
+  const [showProposalModal, setShowProposalModal] = useState(false)
+  const [selectedProposal, setSelectedProposal] =
+    useState<PurchaseProposalDTO | null>(null)
 
   const fetchCellars = async () => {
     try {
@@ -56,29 +62,53 @@ const UserCellars = () => {
   }, [selectedCellar?.id])
 
   const handleDelete = async () => {
-    if (!selectedCellar?.id) {
-      alert('Please select a cellar before deleting.')
-      return
-    }
-
-    const confirmed = window.confirm(
-      `Are you sure you want to delete cellar "${selectedCellar.name}"?`
-    )
-    if (!confirmed) return
+    if (!selectedCellar?.id) return
+    if (!window.confirm(`Delete cellar "${selectedCellar.name}"?`)) return
 
     try {
       await deleteCellar(selectedCellar.id)
-      const updatedCellars = await getMyCellars()
-      setCellars(updatedCellars)
-      setSelectedCellar(updatedCellars[0] || null)
+      const updated = await getMyCellars()
+      setCellars(updated)
+      setSelectedCellar(updated[0] || null)
     } catch (error) {
       console.error('Failed to delete cellar:', error)
-      alert('An error occurred while deleting the cellar.')
+      alert('Error deleting the cellar.')
+    }
+  }
+
+  const openProposalModal = async (cellarWineId: string) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        `http://localhost:3001/purchaseProposals/me/byCellarWine/${cellarWineId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      const proposals = response.data
+      if (proposals.length === 0) {
+        alert('No proposals found for this wine.')
+        return
+      }
+
+      const proposal: PurchaseProposalDTO = {
+        ...proposals[0],
+        cellarWine: proposals[0].wine, // 🔁 Rinomina `wine` in `cellarWine` per compatibilità con ProposalModal
+      }
+
+      setSelectedProposal(proposal)
+      setShowProposalModal(true)
+    } catch (err) {
+      console.error('Errore nel recupero della proposta:', err)
+      alert('Could not load proposal.')
     }
   }
 
   const renderBottlesOnShelf = (
-    bottles: { id: string; title: string }[],
+    bottles: { id: string; title: string; hasPendingProposal?: boolean }[],
     startIndex: number
   ) => {
     return bottles.map((bottle, index) => {
@@ -86,8 +116,14 @@ const UserCellars = () => {
       return (
         <div
           key={bottle.id}
-          className={`bottle bottle-pos-${positionIndex + 1}`}
+          className={`bottle bottle-pos-${positionIndex + 1} ${
+            bottle.hasPendingProposal ? 'bottle-pending' : ''
+          }`}
           title={bottle.title}
+          onClick={() => {
+            if (bottle.hasPendingProposal) openProposalModal(bottle.id)
+          }}
+          style={{ cursor: bottle.hasPendingProposal ? 'pointer' : 'default' }}
         />
       )
     })
@@ -100,9 +136,7 @@ const UserCellars = () => {
       )
     }
 
-    if (!selectedCellar) {
-      return <div className="wine-cellar-container mt-5" />
-    }
+    if (!selectedCellar) return <div className="wine-cellar-container mt-5" />
 
     const shelfGroups = []
     for (let i = 0; i < cellarWines.length; i += 14) {
@@ -111,21 +145,18 @@ const UserCellars = () => {
 
     return (
       <div className="wine-cellar-container mt-5">
-        {shelfGroups.length > 0 ? (
-          shelfGroups.map((bottles, shelfIndex) => (
-            <div key={`shelf-${shelfIndex}`} className="wine-cellar-shelf">
-              {renderBottlesOnShelf(
-                bottles.map((bw) => ({
-                  id: bw.id,
-                  title: `${bw.wineName} – ${bw.wineProducer} (${bw.wineVintage}) x${bw.quantity}`,
-                })),
-                shelfIndex * 14
-              )}
-            </div>
-          ))
-        ) : (
-          <div className="wine-cellar-shelf">{/* Empty shelf */}</div>
-        )}
+        {shelfGroups.map((bottles, shelfIndex) => (
+          <div key={`shelf-${shelfIndex}`} className="wine-cellar-shelf">
+            {renderBottlesOnShelf(
+              bottles.map((bw) => ({
+                id: bw.id,
+                title: `${bw.wineName} – ${bw.wineProducer} (${bw.wineVintage}) x${bw.quantity}`,
+                hasPendingProposal: bw.hasPendingProposal,
+              })),
+              shelfIndex * 14
+            )}
+          </div>
+        ))}
       </div>
     )
   }
@@ -137,10 +168,7 @@ const UserCellars = () => {
         <h4 className="text-darkred">Your Cellars</h4>
         <div className="d-flex align-items-center mb-2">
           <NavDropdown
-            title={
-              selectedCellar?.name ||
-              (cellars.length === 0 ? 'No cellars' : 'Select a cellar')
-            }
+            title={selectedCellar?.name || 'Select a cellar'}
             className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 me-2"
             id="cellar-dropdown"
           >
@@ -169,7 +197,6 @@ const UserCellars = () => {
           </Button>
         </div>
 
-        {/* INFO BOX */}
         {selectedCellar && (
           <div className="border rounded px-3 py-2 bg-white border-secondary border-opacity-50 shadow-sm info-box">
             <p className="mb-1 text-darkred fw-semibold fs-6">Name:</p>
@@ -194,10 +221,24 @@ const UserCellars = () => {
             <p className="mb-1 text-darkred fw-semibold fs-6">Wine list:</p>
             <ul className="list-unstyled mb-0">
               {cellarWines.map((w) => (
-                <li key={w.id} className="mb-1">
+                <li
+                  key={w.id}
+                  className={`mb-1 ${
+                    w.hasPendingProposal ? 'text-danger fw-semibold' : ''
+                  }`}
+                >
                   <span
-                    className="text-dark"
-                    style={{ fontSize: '0.8rem', lineHeight: '1.1' }}
+                    style={{
+                      fontSize: '0.8rem',
+                      lineHeight: '1.1',
+                      cursor: w.hasPendingProposal ? 'pointer' : 'default',
+                      textDecoration: w.hasPendingProposal
+                        ? 'underline'
+                        : 'none',
+                    }}
+                    onClick={() => {
+                      if (w.hasPendingProposal) openProposalModal(w.id)
+                    }}
                   >
                     {w.wineName} – {w.wineProducer} ({w.wineVintage}) ×
                     {w.quantity}
@@ -220,12 +261,7 @@ const UserCellars = () => {
 
             <hr />
             <div className="d-flex justify-content-between mt-2">
-              <Button
-                variant="dark"
-                size="sm"
-                disabled={!selectedCellar}
-                onClick={handleDelete}
-              >
+              <Button variant="dark" size="sm" onClick={handleDelete}>
                 Delete cellar
               </Button>
               <Button
@@ -254,7 +290,7 @@ const UserCellars = () => {
         </div>
       </div>
 
-      {/* MODALI */}
+      {/* MODALS */}
       <CreateCellarModal
         show={showCreateModal}
         handleClose={() => setShowCreateModal(false)}
@@ -295,6 +331,24 @@ const UserCellars = () => {
               selectedCellar.id
             )
             setCellarWines(updatedWines)
+          }}
+        />
+      )}
+
+      {selectedProposal && selectedProposal.cellarWine && (
+        <ProposalModal
+          show={showProposalModal}
+          handleClose={() => setShowProposalModal(false)}
+          wine={selectedProposal.cellarWine}
+          proposal={selectedProposal}
+          onStatusChange={(newStatus) => {
+            setCellarWines((prev) =>
+              prev.map((w) =>
+                w.id === selectedProposal.cellarWine.id
+                  ? { ...w, hasPendingProposal: false }
+                  : w
+              )
+            )
           }}
         />
       )}

@@ -646,6 +646,11 @@ h1 {
   margin-bottom: 100px;
 }
 
+.bottle-pending {
+  border: 2px solid red;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
 /* ======================
      UTILITY CLASSES 
      ====================== */

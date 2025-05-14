@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Card, Button, Form } from 'react-bootstrap'
 import { CellarWineDTO } from '../types/CellarWineDTO'
+import { createProposal } from '../services/purchaseProposalService'
 
 interface Props {
   bottle: CellarWineDTO
@@ -13,12 +14,25 @@ const CellarWineCard = ({ bottle }: Props) => {
   const [submitted, setSubmitted] = useState(false)
 
   const handleOfferSubmit = async () => {
-    if (!offer.trim()) return
+    const numericOffer = parseFloat(offer)
+
+    if (!offer.trim() || isNaN(numericOffer) || numericOffer <= 0) {
+      alert('Please enter a valid offer price greater than zero')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
-      // TODO: Chiamata API per inviare proposta
-      console.log(`Proposta di €${offer} per la bottiglia ${bottle.id}`)
+      const payload = {
+        cellarWineId: bottle.id,
+        proposingPrice: numericOffer,
+        message: '', // oppure puoi permettere un campo libero in UI
+      }
+
+      const proposal = await createProposal(payload)
+      console.log('Proposta creata:', proposal)
+
       setSubmitted(true)
     } catch (err) {
       console.error('Errore durante la proposta:', err)
@@ -50,7 +64,7 @@ const CellarWineCard = ({ bottle }: Props) => {
             value={offer}
             onChange={(e) => setOffer(e.target.value)}
             disabled={isSubmitting || submitted}
-            style={{ maxWidth: '100px' }}
+            style={{ maxWidth: '150px' }}
             className="me-2 py-2"
           />
           <Button
