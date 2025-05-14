@@ -7,23 +7,26 @@ import { AuthUser } from '../types/AuthUser'
 interface HomePageProps {
   user: AuthUser | null
   onLoginClick: () => void
+  isDark: boolean
 }
 
-const HomePage = (props: HomePageProps) => {
+const HomePage = ({ user, onLoginClick, isDark }: HomePageProps) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (props.user) {
+    if (user) {
       navigate('/cellars')
     } else {
-      props.onLoginClick()
+      onLoginClick()
     }
   }
+
   return (
     <Container
       fluid
-      className="d-flex flex-column align-items-center text-center mt-5 "
-      style={{ minHeight: '100vh', paddingTop: '150px' }}
+      className={`homepage-container d-flex flex-column justify-content-center align-items-center text-center ${
+        isDark ? 'dark-mode' : ''
+      }`}
     >
       <motion.img
         src={eCellar}
@@ -31,26 +34,15 @@ const HomePage = (props: HomePageProps) => {
         initial={{ opacity: 0, y: -80 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.4, ease: 'easeOut' }}
-        style={{ width: '50vw', maxWidth: '400px' }}
-        className="mb-4"
+        className="mb-4 logo-img"
       />
 
-      <h1
-        className="fw-bold mb-3 px-3"
-        style={{
-          fontSize: 'clamp(1.5rem, 5vw, 2.5rem)',
-        }}
-      >
+      <h1 className="fw-bold mb-3 px-3 homepage-heading">
         From cellar to marketplace. <br />
         One platform, endless possibilities.
       </h1>
-      <p
-        className="lead text-muted mb-4 px-4"
-        style={{
-          maxWidth: '700px',
-          fontSize: 'clamp(1rem, 4vw, 1.25rem)',
-        }}
-      >
+
+      <p className="lead mb-4 px-4 homepage-subtext">
         Manage your bottles, connect with others, and find your next favorite
         wine. eCellar is the digital platform where your passion meets
         simplicity and connection.

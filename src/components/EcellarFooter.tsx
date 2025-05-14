@@ -6,17 +6,13 @@ const EcellarFooter = () => {
     <footer className="ecellar-footer py-3">
       <Container>
         <Row className="align-items-center">
-          {/* Logo - Ridotto al minimo */}
           <Col xs={2} className="pe-3 text-end">
             <img
               src={logo_eCellar}
               alt="eCellar Logo"
-              className="footer-logo "
-              style={{ width: '30px' }}
+              className="footer-logo"
             />
           </Col>
-
-          {/* Links - Allineati verticalmente al logo */}
           <Col xs={7} className="ps-1">
             <div className="d-flex flex-wrap footer-links-container">
               <a href="/app" className="footer-link">
@@ -51,8 +47,6 @@ const EcellarFooter = () => {
               </a>
             </div>
           </Col>
-
-          {/* Social + Copyright - Allineati a destra */}
           <Col xs={3} className="text-end">
             <div className="social-icons mb-1">
               <a

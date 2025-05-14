@@ -19,7 +19,7 @@ interface EcellaNavbarProps {
   onThemeChange: (theme: 'light' | 'dark') => void // Tipo della funzione
 }
 
-function EcellaNavbar(props: EcellaNavbarProps) {
+const EcellaNavbar = (props: EcellaNavbarProps) => {
   // Language switch state
   const [language, setLanguage] = useState<'ENG' | 'ITA'>('ENG')
 
@@ -29,10 +29,16 @@ function EcellaNavbar(props: EcellaNavbarProps) {
   }
 
   return (
-    <Navbar bg="light" className="shadow-lg z-3 py-2" fixed="top">
+    <Navbar
+      bg={props.currentTheme === 'dark' ? undefined : 'light'}
+      className={`shadow-lg z-3 py-2 ${
+        props.currentTheme === 'dark' ? 'navbar-dark bg-darkgray' : ''
+      }`}
+      fixed="top"
+    >
       <Container>
         <Navbar.Brand href="/">
-          <span style={{ color: 'darkred' }}>e</span>Cellar
+          <span className="brand-e">e</span>Cellar
         </Navbar.Brand>
 
         <Nav className="ms-auto align-items-center">
