@@ -8,7 +8,8 @@ import logo_eCellar from '../assets/logo_eCellar.png'
 
 const WinesSearchPage = () => {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<WineDTO[]>([])
+  const [results, setResults] = useState<CellarWineDTO[]>([])
+
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {

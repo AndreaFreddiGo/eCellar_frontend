@@ -35,3 +35,18 @@ export const createCellarWine = async (
 
   return response.data
 }
+
+// Retrieves all cellar wines that match a list of wine IDs
+export const getCellarWinesByWineIds = async (
+  wineIds: string[]
+): Promise<CellarWineDTO[]> => {
+  const token = localStorage.getItem('token')
+
+  const response = await axios.post(`${BASE_URL}/search/byWineIds`, wineIds, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  return response.data
+}

@@ -17,4 +17,5 @@ export interface CellarWineDTO {
   wineName: string
   wineProducer: string
   wineVintage: number
+  username: string
 }
