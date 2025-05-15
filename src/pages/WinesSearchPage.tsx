@@ -1,18 +1,22 @@
 // src/pages/WinesSearchPage.tsx
-
 import { useEffect, useState } from 'react'
 import { Container, Form, Row, Col } from 'react-bootstrap'
-import logo_eCellar from '../assets/logo_eCellar.png'
 import { searchWines } from '../services/wineService'
-import { getCellarWinesByWineIds } from '../services/cellarWineService'
-import { CellarWineDTO } from '../types/CellarWineDTO'
 import { WineDTO } from '../types/WineDTO'
-import CellarWineCard from '../components/CellarWineCard'
+import WineCard from '../components/WineCard'
+import logo_eCellar from '../assets/logo_eCellar.png'
+import AddBottleModal from '../components/AddBottleModal'
+import { useSearchParams } from 'react-router-dom'
 
 const WinesSearchPage = () => {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<CellarWineDTO[]>([])
+  const [results, setResults] = useState<WineDTO[]>([])
   const [loading, setLoading] = useState(false)
+  const [selectedWineId, setSelectedWineId] = useState<string | null>(null)
+
+  // recupera cellarId dalla query string
+  const [searchParams] = useSearchParams()
+  const selectedCellarId = searchParams.get('cellarId')
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -20,19 +24,10 @@ const WinesSearchPage = () => {
         setResults([])
         return
       }
-
       setLoading(true)
-
       try {
-        const wines: WineDTO[] = await searchWines(query)
-        const wineIds = wines.map((w) => w.id)
-
-        if (wineIds.length === 0) {
-          setResults([])
-        } else {
-          const cellarWines = await getCellarWinesByWineIds(wineIds)
-          setResults(cellarWines)
-        }
+        const wines = await searchWines(query)
+        setResults(wines)
       } catch (error) {
         console.error('Search failed', error)
         setResults([])
@@ -41,14 +36,17 @@ const WinesSearchPage = () => {
       }
     }
 
-    const timeout = setTimeout(fetchResults, 300) // debounce
+    const timeout = setTimeout(() => {
+      fetchResults()
+    }, 300)
+
     return () => clearTimeout(timeout)
   }, [query])
 
   return (
     <Container className="pt-5 mt-5">
       <h2 className="mb-3" style={{ color: 'darkred' }}>
-        Search Bottles
+        Search Wines
       </h2>
       <Form onSubmit={(e) => e.preventDefault()}>
         <Form.Control
@@ -72,16 +70,30 @@ const WinesSearchPage = () => {
 
       {!loading && results.length > 0 && (
         <Row className="mt-4">
-          {results.map((bottle) => (
-            <Col key={bottle.id} md={4} className="mb-4">
-              <CellarWineCard bottle={bottle} />
+          {results.map((wine) => (
+            <Col key={wine.id} md={4} className="mb-4">
+              <WineCard
+                wine={wine}
+                onAddBottleClick={() => setSelectedWineId(wine.id)}
+              />
             </Col>
           ))}
         </Row>
       )}
 
       {!loading && query && results.length === 0 && (
-        <p className="mt-4 text-muted">No bottles found.</p>
+        <p className="mt-4 text-muted">No wines found.</p>
+      )}
+
+      {/* MODAL ADD BOTTLE */}
+      {selectedWineId && selectedCellarId && (
+        <AddBottleModal
+          show={true}
+          onHide={() => setSelectedWineId(null)}
+          wineId={selectedWineId}
+          cellarId={selectedCellarId}
+          onCreated={() => setSelectedWineId(null)}
+        />
       )}
     </Container>
   )

@@ -11,6 +11,7 @@ import WinesSearchModal from '../components/WinesSearchModal'
 import ProposalModal from '../components/ProposalModal'
 import { PurchaseProposalDTO } from '../types/purchaseProposalDTO'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const UserCellars = () => {
   const [cellars, setCellars] = useState<CellarDTO[]>([])
@@ -18,7 +19,7 @@ const UserCellars = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
-  const [showWineSearchModal, setShowWineSearchModal] = useState(false)
+  const [showWinesSearchModal, setShowWinesSearchModal] = useState(false)
   const [cellarWines, setCellarWines] = useState<CellarWineDTO[]>([])
   const [showProposalModal, setShowProposalModal] = useState(false)
   const [selectedProposal, setSelectedProposal] =
@@ -248,15 +249,14 @@ const UserCellars = () => {
             </ul>
 
             <p className="mt-2 mb-0">
-              <a
-                href="#"
+              <Link
+                to={`/wines?cellarId=${selectedCellar.id}`}
                 className="text-decoration-none fs-6"
                 style={{ color: 'darkred', cursor: 'pointer' }}
-                onClick={() => setShowWineSearchModal(true)}
               >
                 <span style={{ color: 'black', fontSize: '1.2rem' }}>➕</span>{' '}
                 Add more bottles
-              </a>
+              </Link>
             </p>
 
             <hr />
@@ -323,8 +323,8 @@ const UserCellars = () => {
 
       {selectedCellar && (
         <WinesSearchModal
-          show={showWineSearchModal}
-          onHide={() => setShowWineSearchModal(false)}
+          show={showWinesSearchModal}
+          onHide={() => setShowWinesSearchModal(false)}
           cellarId={selectedCellar.id}
           onBottleAdded={async () => {
             const updatedWines = await getCellarWinesByCellarId(
