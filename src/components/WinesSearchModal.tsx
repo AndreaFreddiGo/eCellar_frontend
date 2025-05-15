@@ -10,11 +10,9 @@ import logo_eCellar from '../assets/logo_eCellar.png'
 interface Props {
   show: boolean
   onHide: () => void
-  cellarId: string
-  onBottleAdded: () => void
 }
 
-const WinesSearchModal = ({ show, onHide, cellarId, onBottleAdded }: Props) => {
+const WinesSearchModal = ({ show, onHide }: Props) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<CellarWineDTO[]>([])
   const [loading, setLoading] = useState(false)

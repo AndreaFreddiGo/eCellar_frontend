@@ -15,8 +15,9 @@ interface EcellaNavbarProps {
   user: AuthUser | null
   onLoginClick: () => void
   onLogout: () => void
-  currentTheme: 'light' | 'dark' // Specifica i valori possibili
-  onThemeChange: (theme: 'light' | 'dark') => void // Tipo della funzione
+  onSearchClick: () => void
+  currentTheme: 'light' | 'dark'
+  onThemeChange: (theme: 'light' | 'dark') => void
 }
 
 const EcellaNavbar = (props: EcellaNavbarProps) => {
@@ -104,8 +105,11 @@ const EcellaNavbar = (props: EcellaNavbarProps) => {
               <Nav.Link href="/cellars" className="nav-separator ms-2">
                 your cellars
               </Nav.Link>
-              <Nav.Link href="/wines" className="nav-separator m-0">
-                search wine
+              <Nav.Link
+                onClick={props.onSearchClick}
+                className="nav-separator m-0 d-flex align-items-center"
+              >
+                <i className="bi bi-search me-1"></i> search wine
               </Nav.Link>
             </>
           ) : (

@@ -7,7 +7,6 @@ import { getMyCellars, deleteCellar } from '../services/cellarService'
 import { getCellarWinesByCellarId } from '../services/cellarWineService'
 import CreateCellarModal from '../components/CreateCellarModal'
 import UpdateCellarModal from '../components/UpdateCellarModal'
-import WinesSearchModal from '../components/WinesSearchModal'
 import ProposalModal from '../components/ProposalModal'
 import { PurchaseProposalDTO } from '../types/purchaseProposalDTO'
 import axios from 'axios'
@@ -19,7 +18,6 @@ const UserCellars = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
-  const [showWinesSearchModal, setShowWinesSearchModal] = useState(false)
   const [cellarWines, setCellarWines] = useState<CellarWineDTO[]>([])
   const [showProposalModal, setShowProposalModal] = useState(false)
   const [selectedProposal, setSelectedProposal] =
@@ -317,20 +315,6 @@ const UserCellars = () => {
             const refreshed = freshList.find((c) => c.id === updatedCellar.id)
             if (refreshed) setSelectedCellar(refreshed)
             setShowUpdateModal(false)
-          }}
-        />
-      )}
-
-      {selectedCellar && (
-        <WinesSearchModal
-          show={showWinesSearchModal}
-          onHide={() => setShowWinesSearchModal(false)}
-          cellarId={selectedCellar.id}
-          onBottleAdded={async () => {
-            const updatedWines = await getCellarWinesByCellarId(
-              selectedCellar.id
-            )
-            setCellarWines(updatedWines)
           }}
         />
       )}

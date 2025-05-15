@@ -3,47 +3,38 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import './App.css'
 
 import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom'
 
 import EcellaNavbar from './components/EcellarNavbar'
 import EcellarFooter from './components/EcellarFooter'
 import LoginModal from './components/LoginModal'
+import SignUpModal from './components/SignUpModal'
+import WinesSearchModal from './components/WinesSearchModal'
 
 import HomePage from './pages/HomePage'
 import UserProfile from './pages/UserProfile'
 import UserCellars from './pages/UserCellars'
 import WinesSearchPage from './pages/WinesSearchPage'
 import OAuthRedirect from './pages/OAuthRedirect'
-import { useLocation } from 'react-router-dom'
+
 import { AuthUser } from './types/AuthUser'
-import SignUpModal from './components/SignUpModal'
 import axios from 'axios'
 
 function App() {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showSignUpModal, setShowSignUpModal] = useState(false)
+  const [showWinesSearchModal, setShowWinesSearchModal] = useState(false)
   const [isUserLoaded, setIsUserLoaded] = useState(false)
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light')
-  const [showSignUpModal, setShowSignUpModal] = useState(false)
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const body = document.body
-
-    if (currentTheme === 'dark') {
-      body.classList.add('dark-mode')
-
-      const timeout = setTimeout(() => {
-        body.classList.add('lit')
-      }, 50)
-
-      return () => clearTimeout(timeout)
-    } else {
-      body.classList.remove('lit', 'dark-mode')
-    }
-  }, [currentTheme])
-
   const location = useLocation()
 
   useEffect(() => {
@@ -65,11 +56,22 @@ function App() {
     }
 
     setIsUserLoaded(true)
-  }, [location.pathname]) // 🔁 Trigger ogni volta che cambia path
+  }, [location.pathname])
 
-  const handleLogin = () => {
-    setShowLoginModal(true)
-  }
+  useEffect(() => {
+    const body = document.body
+    if (currentTheme === 'dark') {
+      body.classList.add('dark-mode')
+      const timeout = setTimeout(() => {
+        body.classList.add('lit')
+      }, 50)
+      return () => clearTimeout(timeout)
+    } else {
+      body.classList.remove('lit', 'dark-mode')
+    }
+  }, [currentTheme])
+
+  const handleLogin = () => setShowLoginModal(true)
 
   const handleLogout = () => {
     localStorage.clear()
@@ -85,7 +87,16 @@ function App() {
         onLogout={handleLogout}
         currentTheme={currentTheme}
         onThemeChange={setCurrentTheme}
+        onSearchClick={() => setShowWinesSearchModal(true)} // ✅ MODALE, NON PAGINA
       />
+
+      {/* Modale globale per ricerca vini pubblici */}
+      {showWinesSearchModal && (
+        <WinesSearchModal
+          show={showWinesSearchModal}
+          onHide={() => setShowWinesSearchModal(false)}
+        />
+      )}
 
       <main className="page-main">
         <Routes>
@@ -114,7 +125,7 @@ function App() {
               )
             }
           />
-
+          {/* ✅ Questa rotta è mantenuta per il bottone "Add bottle" da UserCellars */}
           <Route path="/wines" element={<WinesSearchPage />} />
           <Route path="/cellars" element={<UserCellars />} />
           <Route
@@ -124,6 +135,7 @@ function App() {
         </Routes>
       </main>
 
+      {/* Modali autenticazione */}
       <LoginModal
         showLoginModal={showLoginModal}
         handleClose={() => setShowLoginModal(false)}
